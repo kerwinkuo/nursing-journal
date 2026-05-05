@@ -1,2320 +1,1521 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="暖心日誌">
-<meta name="theme-color" content="#FFB4D8">
-<title>暖心照護日誌 · 失智症每日記錄</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23FFB4D8'/%3E%3Cstop offset='100%25' stop-color='%23C8B6FF'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='24' fill='url(%23g)'/%3E%3Ctext x='50' y='66' font-size='52' text-anchor='middle'%3E%F0%9F%92%97%3C/text%3E%3C/svg%3E">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f2ea">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="照護紀錄">
+  <title>每日照護點選紀錄</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f7f2ea;
+      --ink: #2f342f;
+      --muted: #6f756e;
+      --line: #d9d0c2;
+      --panel: #fffaf1;
+      --soft: #ede3d3;
+      --mint: #b9d9ca;
+      --mint-strong: #2d6b58;
+      --rose: #e9b4aa;
+      --rose-strong: #9e3d35;
+      --gold: #dfbd63;
+      --blue: #8bb7cf;
+      --shadow: 0 14px 40px rgba(49, 42, 31, 0.12);
+      --radius: 8px;
+      font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-serif;
+    }
 
-<style>
-:root {
-  --bg: #FFF8FB;
-  --card: #FFFFFF;
-  --card-shadow: 0 4px 20px rgba(200, 182, 255, 0.18);
-  --card-shadow-hover: 0 8px 28px rgba(200, 182, 255, 0.28);
-  --border: #FFE4F0;
-  --text: #4A4458;
-  --text-soft: #8B85A0;
-  --text-muted: #B5B0C4;
-  --primary: #FF8FAB;
-  --primary-soft: #FFB4D8;
-  --primary-bg: #FFF0F6;
-  --lavender: #C8B6FF;
-  --lavender-soft: #E0D6FF;
-  --lavender-bg: #F5F0FF;
-  --warm: #FFB347;
-  --warm-bg: #FFF5E6;
-  --danger: #FF6B9D;
-  --danger-bg: #FFEEF4;
-  --success: #7ED6A7;
-  --success-bg: #EDFAF1;
-  --mint: #B8E6D2;
-  --sky: #92C5F9;
-  --sky-bg: #EDF5FF;
-  --gold: #FFD89B;
-  --grad-main: linear-gradient(135deg, #FFB4D8 0%, #C8B6FF 100%);
-  --grad-warm: linear-gradient(135deg, #FFD89B 0%, #FFB347 100%);
-  --grad-danger: linear-gradient(135deg, #FFB4A2 0%, #FF6B9D 100%);
-  --grad-mint: linear-gradient(135deg, #B8E6D2 0%, #92C5F9 100%);
-}
+    * {
+      box-sizing: border-box;
+    }
 
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(135deg, rgba(185, 217, 202, 0.38), transparent 28rem),
+        linear-gradient(315deg, rgba(223, 189, 99, 0.2), transparent 34rem),
+        var(--paper);
+      color: var(--ink);
+      letter-spacing: 0;
+    }
 
-html, body {
-  margin: 0;
-  padding: 0;
-}
+    button,
+    input {
+      font: inherit;
+    }
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  font-size: 16px;
-  line-height: 1.6;
-  padding-bottom: calc(80px + env(safe-area-inset-bottom));
-  background-image:
-    radial-gradient(circle at 10% 0%, #FFE4F0 0%, transparent 40%),
-    radial-gradient(circle at 90% 100%, #E0D6FF 0%, transparent 40%);
-  background-attachment: fixed;
-  min-height: 100vh;
-}
+    button {
+      border: 0;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-.container { max-width: 640px; margin: 0 auto; padding: 0 16px; }
+    .app {
+      width: min(100%, 760px);
+      margin: 0 auto;
+      padding: 18px 14px 92px;
+    }
 
-/* ===== Header ===== */
-.header {
-  background: var(--grad-main);
-  color: white;
-  padding: 18px 16px calc(18px + env(safe-area-inset-top));
-  padding-top: calc(18px + env(safe-area-inset-top));
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 4px 16px rgba(255, 143, 171, 0.25);
-  border-radius: 0 0 24px 24px;
-  overflow: hidden;
-}
-.header::before {
-  content: "";
-  position: absolute;
-  top: -30px; right: -30px;
-  width: 120px; height: 120px;
-  background: rgba(255,255,255,0.15);
-  border-radius: 50%;
-}
-.header::after {
-  content: "";
-  position: absolute;
-  bottom: -40px; left: -20px;
-  width: 100px; height: 100px;
-  background: rgba(255,255,255,0.12);
-  border-radius: 50%;
-}
-.header-inner { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; }
-.header-top {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.mascot {
-  width: 52px; height: 52px;
-  background: white;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 30px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  animation: bounce 3s ease-in-out infinite;
-  flex-shrink: 0;
-}
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
-}
-.greeting { flex: 1; min-width: 0; }
-.greeting h1 {
-  margin: 0; font-size: 18px; font-weight: 700;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-.greeting .sub {
-  font-size: 13px; opacity: 0.95; margin-top: 2px;
-  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
-}
-.user-chip {
-  background: rgba(255,255,255,0.25);
-  padding: 3px 10px;
-  border-radius: 12px;
-  font-size: 12px;
-  cursor: pointer;
-  backdrop-filter: blur(8px);
-  font-weight: 500;
-}
-.user-chip:active { transform: scale(0.95); }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      margin: -18px -14px 16px;
+      padding: 12px 14px;
+      background: color-mix(in oklch, var(--paper) 88%, transparent);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(126, 111, 88, 0.16);
+    }
 
-/* ===== 設定提醒 ===== */
-.config-warning {
-  margin: 12px 0 0;
-  background: rgba(255,255,255,0.95);
-  color: #B45309;
-  padding: 10px 12px;
-  border-radius: 12px;
-  font-size: 13px;
-  display: flex; gap: 8px; align-items: center;
-}
-.config-warning button {
-  margin-left: auto;
-  background: var(--warm);
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 10px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-}
+    .topbar-inner {
+      width: min(100%, 760px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
 
-/* ===== 分頁標籤 ===== */
-.tabs {
-  display: flex;
-  gap: 6px;
-  background: white;
-  margin: 12px 0;
-  padding: 6px;
-  border-radius: 16px;
-  box-shadow: var(--card-shadow);
-}
-.tab {
-  flex: 1;
-  padding: 10px 6px;
-  font-size: 13px;
-  font-weight: 600;
-  border: none;
-  background: transparent;
-  color: var(--text-soft);
-  border-radius: 12px;
-  cursor: pointer;
-  font-family: inherit;
-  transition: all 0.2s;
-}
-.tab.active {
-  background: var(--grad-main);
-  color: white;
-  box-shadow: 0 3px 10px rgba(255, 143, 171, 0.35);
-}
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
 
-.page { display: none; }
-.page.active { display: block; }
+    h1 {
+      font-size: 1.28rem;
+      line-height: 1.25;
+      font-weight: 800;
+    }
 
-/* ===== 卡片 ===== */
-.card {
-  background: var(--card);
-  border-radius: 18px;
-  padding: 16px;
-  margin-bottom: 14px;
-  box-shadow: var(--card-shadow);
-  position: relative;
-  overflow: hidden;
-}
-.card::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0; height: 3px;
-  background: var(--grad-main);
-  opacity: 0.4;
-}
-.card.warn::before { background: var(--grad-warm); opacity: 0.7; }
-.card.danger::before { background: var(--grad-danger); opacity: 0.7; }
-.card.mint::before { background: var(--grad-mint); opacity: 0.6; }
+    .subtitle {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
 
-.card h2 {
-  font-size: 15px;
-  margin: 0 0 4px;
-  font-weight: 700;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.card h2 .ico {
-  width: 28px; height: 28px;
-  border-radius: 10px;
-  display: inline-flex; align-items: center; justify-content: center;
-  font-size: 16px;
-  background: var(--primary-bg);
-}
-.card.warn h2 .ico { background: var(--warm-bg); }
-.card.danger h2 .ico { background: var(--danger-bg); }
-.card.mint h2 .ico { background: var(--success-bg); }
-.card .hint {
-  font-size: 12px;
-  color: var(--text-soft);
-  margin: 0 0 10px;
-}
-.subgroup-label {
-  font-size: 13px;
-  font-weight: 600;
-  margin: 12px 0 6px;
-  color: var(--text);
-  display: flex; align-items: center; gap: 6px;
-}
-.subgroup-label::before {
-  content: "";
-  width: 4px; height: 14px;
-  background: var(--primary-soft);
-  border-radius: 2px;
-}
-.card.warn .subgroup-label::before { background: var(--warm); }
-.card.danger .subgroup-label::before { background: var(--danger); }
-.card.mint .subgroup-label::before { background: var(--success); }
-.subgroup-label:first-of-type { margin-top: 4px; }
+    .date-pill {
+      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 12px;
+      border-radius: var(--radius);
+      background: var(--panel);
+      color: var(--ink);
+      border: 1px solid var(--line);
+      box-shadow: 0 6px 16px rgba(57, 45, 30, 0.07);
+      white-space: nowrap;
+    }
 
-/* ===== 選項按鈕 ===== */
-.opt-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-}
-.opt-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
-.opt-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+    .date-pill input {
+      width: 116px;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      outline: 0;
+    }
 
-.opt {
-  padding: 12px 8px;
-  font-size: 14px;
-  background: white;
-  border: 2px solid var(--border);
-  border-radius: 14px;
-  color: var(--text);
-  text-align: center;
-  cursor: pointer;
-  min-height: 50px;
-  font-family: inherit;
-  transition: all 0.2s;
-  font-weight: 500;
-  position: relative;
-}
-.opt:active { transform: scale(0.94); }
-.opt.selected {
-  background: var(--grad-main);
-  color: white;
-  border-color: transparent;
-  box-shadow: 0 4px 12px rgba(255, 143, 171, 0.35);
-  transform: translateY(-1px);
-}
-.card.warn .opt.selected {
-  background: var(--grad-warm);
-  box-shadow: 0 4px 12px rgba(255, 179, 71, 0.35);
-}
-.card.danger .opt.selected {
-  background: var(--grad-danger);
-  box-shadow: 0 4px 12px rgba(255, 107, 157, 0.35);
-}
-.card.mint .opt.selected {
-  background: var(--grad-mint);
-  box-shadow: 0 4px 12px rgba(126, 214, 167, 0.35);
-}
+    .hero {
+      display: grid;
+      gap: 12px;
+      margin: 14px 0 16px;
+      padding: 14px;
+      border-radius: var(--radius);
+      background:
+        linear-gradient(120deg, rgba(255, 250, 241, 0.94), rgba(255, 250, 241, 0.72)),
+        radial-gradient(circle at 82% 18%, rgba(139, 183, 207, 0.44), transparent 34%);
+      border: 1px solid rgba(126, 111, 88, 0.18);
+      box-shadow: var(--shadow);
+    }
 
-/* mood emoji 卡片 */
-.mood-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.mood-opt {
-  padding: 14px 6px;
-  font-size: 13px;
-}
-.mood-opt .emoji {
-  display: block;
-  font-size: 28px;
-  margin-bottom: 4px;
-  line-height: 1;
-}
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 74px 1fr;
+      gap: 14px;
+      align-items: center;
+    }
 
-/* ===== 輸入區 ===== */
-input, textarea, select {
-  width: 100%;
-  padding: 12px 14px;
-  font-size: 15px;
-  border: 2px solid var(--border);
-  border-radius: 12px;
-  font-family: inherit;
-  background: white;
-  color: var(--text);
-  transition: border-color 0.2s;
-}
-input:focus, textarea:focus {
-  outline: none;
-  border-color: var(--primary-soft);
-}
-textarea { min-height: 80px; resize: vertical; }
+    .mark {
+      width: 74px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: conic-gradient(from 210deg, var(--mint), var(--gold), var(--rose), var(--blue), var(--mint));
+      display: grid;
+      place-items: center;
+      box-shadow: inset 0 0 0 8px rgba(255, 250, 241, 0.82);
+    }
 
-.icon-btn {
-  padding: 10px 14px;
-  background: var(--primary-bg);
-  border: 2px solid var(--border);
-  border-radius: 12px;
-  font-size: 13px;
-  cursor: pointer;
-  white-space: nowrap;
-  font-family: inherit;
-  color: var(--text);
-  font-weight: 600;
-  transition: all 0.15s;
-}
-.icon-btn:active { transform: scale(0.96); }
-.icon-btn.recording {
-  background: var(--danger-bg);
-  border-color: var(--danger);
-  color: var(--danger);
-  animation: pulse 1.5s ease-in-out infinite;
-}
-@keyframes pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 107, 157, 0.4); }
-  50% { box-shadow: 0 0 0 8px rgba(255, 107, 157, 0); }
-}
+    .mark svg {
+      width: 36px;
+      height: 36px;
+      stroke: #354338;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
 
-/* ===== 照片區 ===== */
-.photo-preview {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin-top: 12px;
-}
-.photo-preview img {
-  width: 100%;
-  height: 90px;
-  object-fit: cover;
-  border-radius: 12px;
-  border: 2px solid var(--border);
-}
-.photo-item { position: relative; }
-.photo-remove {
-  position: absolute;
-  top: 4px; right: 4px;
-  background: rgba(0,0,0,0.7);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 24px; height: 24px;
-  font-size: 14px;
-  cursor: pointer;
-  line-height: 1;
-}
+    .hero h2 {
+      font-size: 1.08rem;
+      line-height: 1.35;
+      font-weight: 800;
+    }
 
-/* ===== 警示橫幅 ===== */
-.warn-banner {
-  display: none;
-  margin-top: 12px;
-  padding: 12px 14px;
-  background: white;
-  border-radius: 12px;
-  font-size: 13px;
-  font-weight: 600;
-  border: 2px solid var(--danger);
-  color: var(--danger);
-  line-height: 1.5;
-}
-.warn-banner.show { display: block; }
-.warn-banner .actions {
-  display: flex; gap: 8px; margin-top: 8px;
-  flex-wrap: wrap;
-}
-.warn-banner .actions a {
-  flex: 1;
-  text-align: center;
-  background: var(--danger);
-  color: white;
-  text-decoration: none;
-  padding: 8px;
-  border-radius: 10px;
-  font-size: 12px;
-}
+    .hero p {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
 
-/* ===== 動作按鈕列 ===== */
-.action-bar {
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
-  background: rgba(255,255,255,0.95);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
-  border-top: 1px solid var(--border);
-  display: flex;
-  gap: 10px;
-  z-index: 90;
-  max-width: 640px;
-  margin: 0 auto;
-}
-.action-bar-inner {
-  display: flex; gap: 10px; width: 100%;
-  max-width: 640px; margin: 0 auto;
-}
-.btn {
-  flex: 1;
-  padding: 14px;
-  font-size: 15px;
-  font-weight: 700;
-  border: none;
-  border-radius: 14px;
-  cursor: pointer;
-  font-family: inherit;
-  transition: all 0.15s;
-}
-.btn:active { transform: scale(0.97); }
-.btn-primary {
-  background: var(--grad-main);
-  color: white;
-  box-shadow: 0 4px 14px rgba(255, 143, 171, 0.4);
-}
-.btn-primary:disabled {
-  background: #C7C2D4;
-  box-shadow: none;
-}
-.btn-secondary {
-  background: var(--primary-bg);
-  color: var(--text);
-}
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
 
-/* ===== 模態框 ===== */
-.modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(74, 68, 88, 0.5);
-  backdrop-filter: blur(4px);
-  z-index: 1000;
-  align-items: flex-end;
-  justify-content: center;
-}
-.modal.active { display: flex; }
-.modal-content {
-  background: white;
-  border-radius: 24px 24px 0 0;
-  padding: 24px 20px calc(20px + env(safe-area-inset-bottom));
-  width: 100%;
-  max-width: 640px;
-  max-height: 88vh;
-  overflow-y: auto;
-  animation: slideUp 0.25s ease-out;
-}
-@keyframes slideUp {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
-}
-.modal-content h3 {
-  margin: 0 0 16px;
-  font-size: 18px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.modal-content .modal-close {
-  position: absolute;
-  top: 16px; right: 16px;
-  width: 32px; height: 32px;
-  background: var(--primary-bg);
-  border: none;
-  border-radius: 50%;
-  font-size: 18px;
-  cursor: pointer;
-  color: var(--text-soft);
-}
-@media (min-width: 600px) {
-  .modal { align-items: center; padding: 16px; }
-  .modal-content {
-    border-radius: 24px;
-    max-height: 85vh;
-    padding-bottom: 24px;
-  }
-}
+    .small-action {
+      min-height: 42px;
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.48);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      font-weight: 700;
+    }
 
-/* ===== Toast ===== */
-.toast {
-  position: fixed;
-  bottom: 96px;
-  left: 50%;
-  transform: translateX(-50%) translateY(20px);
-  background: var(--text);
-  color: white;
-  padding: 12px 22px;
-  border-radius: 24px;
-  font-size: 14px;
-  font-weight: 600;
-  z-index: 2000;
-  opacity: 0;
-  transition: all 0.3s;
-  pointer-events: none;
-  max-width: 90%;
-  text-align: center;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-}
-.toast.show {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
-.toast.error { background: var(--danger); }
-.toast.success { background: var(--success); color: var(--text); }
+    .section {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: var(--radius);
+      background: rgba(255, 250, 241, 0.8);
+      border: 1px solid rgba(126, 111, 88, 0.18);
+    }
 
-/* ===== 歷史 ===== */
-.history-item {
-  padding: 14px;
-  background: white;
-  border-radius: 14px;
-  margin-bottom: 8px;
-  border: 2px solid var(--border);
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.history-item:active {
-  background: var(--primary-bg);
-  transform: scale(0.99);
-}
-.history-date {
-  font-weight: 700;
-  font-size: 15px;
-  display: flex; align-items: center; gap: 8px;
-}
-.history-date .badge-warning {
-  background: var(--danger-bg);
-  color: var(--danger);
-  font-size: 11px;
-  padding: 2px 8px;
-  border-radius: 8px;
-  font-weight: 600;
-}
-.history-meta {
-  font-size: 12px;
-  color: var(--text-soft);
-  margin-top: 6px;
-  line-height: 1.6;
-}
+    .section-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
 
-/* ===== 趨勢圖表 ===== */
-.stat-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  margin-bottom: 14px;
-}
-.stat-card {
-  background: white;
-  border-radius: 16px;
-  padding: 14px;
-  box-shadow: var(--card-shadow);
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-.stat-card .stat-num {
-  font-size: 26px;
-  font-weight: 800;
-  background: var(--grad-main);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  line-height: 1.2;
-}
-.stat-card .stat-label {
-  font-size: 12px;
-  color: var(--text-soft);
-  margin-top: 2px;
-}
-.stat-card.warm .stat-num { background: var(--grad-warm); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-.stat-card.danger .stat-num { background: var(--grad-danger); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-.stat-card.mint .stat-num { background: var(--grad-mint); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+    .section h2 {
+      font-size: 1rem;
+      line-height: 1.35;
+      font-weight: 800;
+    }
 
-.mood-trend {
-  display: flex;
-  justify-content: space-between;
-  align-items: end;
-  gap: 4px;
-  margin: 12px 0;
-  height: 110px;
-  padding: 0 4px;
-}
-.trend-day {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-.trend-bar {
-  width: 100%;
-  border-radius: 8px 8px 4px 4px;
-  background: var(--grad-main);
-  min-height: 8px;
-  position: relative;
-  transition: height 0.5s;
-}
-.trend-bar.empty {
-  background: var(--border);
-  height: 8px !important;
-}
-.trend-emoji {
-  font-size: 20px;
-  line-height: 1;
-}
-.trend-day-label {
-  font-size: 11px;
-  color: var(--text-soft);
-  font-weight: 600;
-}
+    .hint {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.45;
+    }
 
-/* ===== 設定精靈步驟 ===== */
-.wizard-step {
-  background: var(--lavender-bg);
-  border-radius: 14px;
-  padding: 14px;
-  margin-bottom: 10px;
-  border: 2px solid var(--lavender-soft);
-}
-.wizard-step .step-num {
-  display: inline-block;
-  background: var(--lavender);
-  color: white;
-  width: 24px; height: 24px;
-  border-radius: 50%;
-  text-align: center;
-  font-weight: 700;
-  font-size: 13px;
-  margin-right: 8px;
-  line-height: 24px;
-}
-.wizard-step h4 {
-  margin: 0 0 6px;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-}
-.wizard-step .step-desc {
-  font-size: 13px;
-  color: var(--text-soft);
-  margin: 6px 0 8px;
-  padding-left: 32px;
-}
-.wizard-step .step-actions {
-  padding-left: 32px;
-  display: flex; gap: 6px; flex-wrap: wrap;
-}
-.wizard-step a, .wizard-step button.copy-btn {
-  background: white;
-  border: 2px solid var(--lavender-soft);
-  padding: 6px 12px;
-  border-radius: 10px;
-  font-size: 12px;
-  font-weight: 600;
-  text-decoration: none;
-  color: var(--text);
-  cursor: pointer;
-  font-family: inherit;
-}
+    .status-dot {
+      flex: 0 0 auto;
+      width: 12px;
+      height: 12px;
+      margin-top: 5px;
+      border-radius: 50%;
+      background: var(--line);
+    }
 
-/* ===== 加分項目:鼓勵 ===== */
-.encouragement {
-  background: var(--grad-main);
-  color: white;
-  padding: 14px 16px;
-  border-radius: 16px;
-  margin-bottom: 14px;
-  font-size: 14px;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  box-shadow: 0 4px 14px rgba(255, 143, 171, 0.3);
-}
-.encouragement .heart {
-  font-size: 22px;
-  animation: heartbeat 1.5s ease-in-out infinite;
-}
-@keyframes heartbeat {
-  0%, 100% { transform: scale(1); }
-  30% { transform: scale(1.15); }
-  50% { transform: scale(1); }
-  70% { transform: scale(1.1); }
-}
+    .section[data-touched="true"] .status-dot {
+      background: var(--mint-strong);
+    }
 
-/* ===== Onboarding ===== */
-.onboarding {
-  position: fixed; inset: 0;
-  background: var(--grad-main);
-  z-index: 5000;
-  display: none;
-  flex-direction: column;
-  align-items: center; justify-content: center;
-  padding: 24px;
-  color: white;
-  text-align: center;
-}
-.onboarding.show { display: flex; }
-.onboarding .big-mascot {
-  font-size: 80px;
-  animation: bounce 2s ease-in-out infinite;
-  margin-bottom: 16px;
-}
-.onboarding h1 { font-size: 28px; margin: 0 0 8px; font-weight: 800; }
-.onboarding p { font-size: 16px; max-width: 320px; margin: 0 0 24px; opacity: 0.95; line-height: 1.6; }
-.onboarding .start-btn {
-  background: white;
-  color: var(--primary);
-  border: none;
-  padding: 14px 32px;
-  border-radius: 16px;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: inherit;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.15);
-}
-.onboarding .step-indicator {
-  display: flex; gap: 6px; margin-top: 24px;
-}
-.onboarding .step-indicator span {
-  width: 8px; height: 8px;
-  background: rgba(255,255,255,0.4);
-  border-radius: 50%;
-}
-.onboarding .step-indicator span.active {
-  width: 24px;
-  background: white;
-  border-radius: 4px;
-}
+    .group {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
 
-/* ===== 慶祝彈窗 ===== */
-.celebrate {
-  display: none;
-  position: fixed; inset: 0;
-  z-index: 3000;
-  align-items: center; justify-content: center;
-  background: rgba(74, 68, 88, 0.4);
-  backdrop-filter: blur(6px);
-}
-.celebrate.show { display: flex; animation: fadeIn 0.2s; }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-.celebrate-content {
-  background: white;
-  border-radius: 24px;
-  padding: 28px 24px;
-  max-width: 320px;
-  text-align: center;
-  margin: 16px;
-  animation: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-@keyframes pop {
-  0% { transform: scale(0.7); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-.celebrate-content .emoji-big { font-size: 64px; line-height: 1; margin-bottom: 12px; }
-.celebrate-content h3 { margin: 0 0 6px; font-size: 20px; font-weight: 700; }
-.celebrate-content p { margin: 0 0 16px; font-size: 14px; color: var(--text-soft); line-height: 1.6; }
+    .label {
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
 
-/* 小螢幕適配 */
-@media (max-width: 380px) {
-  .opt { font-size: 13px; padding: 10px 4px; min-height: 46px; }
-  .opt-grid.cols-3, .opt-grid.cols-4 { grid-template-columns: repeat(2, 1fr); }
-  .mood-grid { grid-template-columns: repeat(3, 1fr); }
-  .mood-opt .emoji { font-size: 24px; }
-  .stat-card .stat-num { font-size: 22px; }
-  .greeting h1 { font-size: 16px; }
-}
+    .chips {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
 
-/* 列表式區塊樣式 */
-.history-detail-row {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 8px;
-  padding: 6px 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 13px;
-}
-.history-detail-row:last-child { border-bottom: none; }
-.history-detail-row .label { color: var(--text-soft); }
-.history-detail-row .value { color: var(--text); font-weight: 500; }
+    .chips.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
 
-/* 趨勢說明 */
-.trend-legend {
-  display: flex; gap: 12px; flex-wrap: wrap;
-  font-size: 11px; color: var(--text-soft);
-  margin-top: 8px; justify-content: center;
-}
+    .chips.four {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
 
-.empty-state {
-  text-align: center;
-  padding: 40px 20px;
-  color: var(--text-soft);
-}
-.empty-state .big-emoji {
-  font-size: 60px;
-  margin-bottom: 12px;
-  opacity: 0.6;
-}
-.empty-state p { margin: 0; font-size: 14px; }
-</style>
+    .chip {
+      min-height: 48px;
+      padding: 10px 8px;
+      border-radius: var(--radius);
+      background: #fffdf7;
+      border: 1px solid var(--line);
+      color: var(--ink);
+      font-weight: 800;
+      line-height: 1.18;
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.75) inset;
+      transition: transform 140ms ease, border-color 140ms ease, background 140ms ease, box-shadow 140ms ease;
+    }
+
+    .chip:active {
+      transform: scale(0.98);
+    }
+
+    .chip[aria-pressed="true"] {
+      background: color-mix(in oklch, var(--mint) 62%, white);
+      border-color: var(--mint-strong);
+      box-shadow: 0 0 0 2px rgba(45, 107, 88, 0.12);
+    }
+
+    .chip.warning[aria-pressed="true"] {
+      background: color-mix(in oklch, var(--rose) 66%, white);
+      border-color: var(--rose-strong);
+      color: #642722;
+      box-shadow: 0 0 0 2px rgba(158, 61, 53, 0.12);
+    }
+
+    .chip small {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .severity {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .severity .chip {
+      min-height: 44px;
+    }
+
+    .alert {
+      display: none;
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: var(--radius);
+      background: #fff1ed;
+      border: 1px solid var(--rose);
+      color: #642722;
+      line-height: 1.5;
+      font-weight: 700;
+    }
+
+    .alert.show {
+      display: block;
+    }
+
+    .summary {
+      margin-top: 14px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .summary-row {
+      display: grid;
+      grid-template-columns: 84px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(126, 111, 88, 0.14);
+      line-height: 1.45;
+    }
+
+    .summary-row:last-child {
+      border-bottom: 0;
+    }
+
+    .summary-row strong {
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .summary-row span {
+      font-weight: 700;
+    }
+
+    .bottom-bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 30;
+      padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+      background: rgba(247, 242, 234, 0.9);
+      backdrop-filter: blur(18px);
+      border-top: 1px solid rgba(126, 111, 88, 0.18);
+    }
+
+    .bottom-inner {
+      width: min(100%, 760px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 10px;
+    }
+
+    .primary,
+    .secondary {
+      min-height: 52px;
+      border-radius: var(--radius);
+      font-weight: 900;
+    }
+
+    .primary {
+      background: var(--mint-strong);
+      color: #f8fff8;
+      box-shadow: 0 10px 24px rgba(45, 107, 88, 0.22);
+    }
+
+    .secondary {
+      background: var(--panel);
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+
+    .records {
+      margin-top: 14px;
+    }
+
+    .record-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .record-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px;
+      border-radius: var(--radius);
+      background: rgba(255, 253, 247, 0.82);
+      border: 1px solid rgba(126, 111, 88, 0.15);
+    }
+
+    .record-item b {
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .record-item span {
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.4;
+    }
+
+    .record-item button {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius);
+      background: #f6e6df;
+      color: var(--rose-strong);
+      font-weight: 900;
+    }
+
+    .cloud-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .input-grid {
+      display: grid;
+      gap: 8px;
+    }
+
+    .input-grid.two {
+      grid-template-columns: 1fr;
+    }
+
+    .field {
+      display: grid;
+      gap: 5px;
+    }
+
+    .field span {
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .field input {
+      width: 100%;
+      min-height: 48px;
+      padding: 10px 12px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: #fffdf7;
+      color: var(--ink);
+      outline: 0;
+    }
+
+    .field input:focus {
+      border-color: var(--mint-strong);
+      box-shadow: 0 0 0 3px rgba(45, 107, 88, 0.12);
+    }
+
+    .cloud-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .cloud-actions .small-action {
+      min-height: 48px;
+    }
+
+    .cloud-status {
+      padding: 11px 12px;
+      border-radius: var(--radius);
+      background: rgba(185, 217, 202, 0.24);
+      border: 1px solid rgba(45, 107, 88, 0.2);
+      color: var(--mint-strong);
+      font-weight: 800;
+      line-height: 1.5;
+    }
+
+    .cloud-status.warn {
+      background: #fff1ed;
+      border-color: var(--rose);
+      color: var(--rose-strong);
+    }
+
+    .privacy-note {
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.55;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 86px;
+      z-index: 40;
+      width: min(calc(100% - 28px), 440px);
+      transform: translate(-50%, 20px);
+      opacity: 0;
+      pointer-events: none;
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      background: #2f342f;
+      color: #fffaf1;
+      text-align: center;
+      font-weight: 800;
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (min-width: 680px) {
+      .app {
+        padding-top: 24px;
+      }
+
+      .topbar {
+        margin-top: -24px;
+      }
+
+      h1 {
+        font-size: 1.42rem;
+      }
+
+      .hero-grid {
+        grid-template-columns: 90px 1fr;
+      }
+
+      .mark {
+        width: 90px;
+      }
+
+      .mark svg {
+        width: 42px;
+        height: 42px;
+      }
+
+      .chips {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .chips.two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .input-grid.two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
 </head>
 <body>
+  <main class="app">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div>
+          <h1>每日照護點選紀錄</h1>
+          <p class="subtitle">少打字，用點選留下有用線索</p>
+        </div>
+        <label class="date-pill">
+          <span aria-hidden="true">日</span>
+          <span class="sr-only">紀錄日期</span>
+          <input id="recordDate" type="date">
+        </label>
+      </div>
+    </header>
 
-<!-- ===== 首次啟用引導 ===== -->
-<div class="onboarding" id="onboarding">
-  <div class="big-mascot">💗</div>
-  <h1 id="ob-title">嗨,我是小暖!</h1>
-  <p id="ob-text">每天記錄家人的狀況,陪您一起守護最重要的人 💕</p>
-  <button class="start-btn" onclick="onboardingNext()" id="ob-btn">開始使用 →</button>
-  <div class="step-indicator">
-    <span class="active" id="ob-dot-0"></span>
-    <span id="ob-dot-1"></span>
-    <span id="ob-dot-2"></span>
-  </div>
-</div>
-
-<!-- ===== Header ===== -->
-<div class="header">
-  <div class="header-inner">
-    <div class="header-top">
-      <div class="mascot">💗</div>
-      <div class="greeting">
-        <h1 id="greeting-title">早安,今天也辛苦你了</h1>
-        <div class="sub">
-          <span id="today-date"></span>
-          <span class="user-chip" id="user-chip" onclick="showUserPicker()">
-            <span id="current-user">點此選擇記錄者</span> ▾
-          </span>
+    <section class="hero" aria-label="操作捷徑">
+      <div class="hero-grid">
+        <div class="mark" aria-hidden="true">
+          <svg viewBox="0 0 48 48">
+            <path d="M15 24c0-7 4-12 10-12s10 5 10 12-4 12-10 12S15 31 15 24Z"></path>
+            <path d="M19 24h12"></path>
+            <path d="M24 18v12"></path>
+            <path d="M10 33c3 4 8 7 15 7 6 0 11-3 14-7"></path>
+          </svg>
+        </div>
+        <div>
+          <h2>每天點一點，醫師比較容易看出變化。</h2>
+          <p>黃昏症候群看固定時段，譫妄看突然變化。先點最符合的狀況，空白也可以存。</p>
         </div>
       </div>
-    </div>
-    <div class="config-warning" id="config-warning" style="display:none;">
-      <span>☁ 還沒連雲端,只存手機本機</span>
-      <button onclick="showConfig()">立即設定</button>
-    </div>
-  </div>
-</div>
-
-<div class="container">
-
-<!-- ===== 分頁 ===== -->
-<div class="tabs">
-  <button class="tab active" data-page="record" onclick="switchTab('record')">📝 今日</button>
-  <button class="tab" data-page="trend" onclick="switchTab('trend')">📊 趨勢</button>
-  <button class="tab" data-page="history" onclick="switchTab('history')">📋 歷史</button>
-  <button class="tab" data-page="settings" onclick="switchTab('settings')">⚙ 設定</button>
-</div>
-
-<!-- ===== 今日記錄頁 ===== -->
-<div class="page active" id="page-record">
-
-<!-- 鼓勵小語 -->
-<div class="encouragement" id="encouragement">
-  <div class="heart">💗</div>
-  <div id="encourage-text">您每一份記錄,都是給家人最溫柔的守護</div>
-</div>
-
-<!-- 1. 整體心情 -->
-<div class="card">
-  <h2><span class="ico">😊</span>今日整體心情</h2>
-  <div class="opt-grid mood-grid" data-group="mood" data-mode="single">
-    <button class="opt mood-opt" data-val="非常好"><span class="emoji">😄</span>非常好</button>
-    <button class="opt mood-opt" data-val="不錯"><span class="emoji">🙂</span>不錯</button>
-    <button class="opt mood-opt" data-val="平穩"><span class="emoji">😐</span>平穩</button>
-    <button class="opt mood-opt" data-val="不佳"><span class="emoji">😟</span>不佳</button>
-    <button class="opt mood-opt" data-val="很差"><span class="emoji">😢</span>很差</button>
-    <button class="opt mood-opt" data-val="激動"><span class="emoji">😠</span>激動</button>
-  </div>
-</div>
-
-<!-- 2. 主要情緒 -->
-<div class="card">
-  <h2><span class="ico">💭</span>今日主要情緒</h2>
-  <p class="hint">可複選 · 沒有就略過</p>
-  <div class="opt-grid cols-4" data-group="emotion" data-mode="multi">
-    <button class="opt" data-val="平靜">平靜</button>
-    <button class="opt" data-val="焦慮">焦慮</button>
-    <button class="opt" data-val="易怒">易怒</button>
-    <button class="opt" data-val="悲傷">悲傷</button>
-    <button class="opt" data-val="恐懼">恐懼</button>
-    <button class="opt" data-val="混亂">混亂</button>
-    <button class="opt" data-val="淡漠">淡漠</button>
-    <button class="opt" data-val="多疑">多疑</button>
-  </div>
-</div>
-
-<!-- 3. 行為觀察 -->
-<div class="card">
-  <h2><span class="ico">👀</span>今日出現的行為</h2>
-  <p class="hint">可複選 · 沒有就不用點</p>
-  <div class="opt-grid" data-group="behavior" data-mode="multi">
-    <button class="opt" data-val="重複問話">重複問話</button>
-    <button class="opt" data-val="遊走">遊走</button>
-    <button class="opt" data-val="藏東西">藏東西</button>
-    <button class="opt" data-val="拒絕協助">拒絕協助</button>
-    <button class="opt" data-val="罵人/攻擊">罵人/攻擊</button>
-    <button class="opt" data-val="哭泣">哭泣</button>
-    <button class="opt" data-val="退縮">退縮</button>
-    <button class="opt" data-val="幻覺">幻覺</button>
-    <button class="opt" data-val="妄想">妄想</button>
-    <button class="opt" data-val="誤認家人">誤認家人</button>
-  </div>
-</div>
-
-<!-- 4. 黃昏症候群 -->
-<div class="card warn">
-  <h2><span class="ico">🌅</span>黃昏症候群</h2>
-  <p class="hint">傍晚到夜間混亂、焦躁加劇</p>
-
-  <div class="subgroup-label">嚴重程度</div>
-  <div class="opt-grid cols-4" data-group="sundown_level" data-mode="single">
-    <button class="opt" data-val="無">無</button>
-    <button class="opt" data-val="輕微">輕微</button>
-    <button class="opt" data-val="明顯">明顯</button>
-    <button class="opt" data-val="嚴重">嚴重</button>
-  </div>
-
-  <div class="subgroup-label">主要症狀(可複選)</div>
-  <div class="opt-grid cols-3" data-group="sundown_sym" data-mode="multi">
-    <button class="opt" data-val="焦躁不安">焦躁不安</button>
-    <button class="opt" data-val="來回踱步">來回踱步</button>
-    <button class="opt" data-val="想回家">想回家</button>
-    <button class="opt" data-val="喊叫">喊叫</button>
-    <button class="opt" data-val="攻擊性">攻擊性</button>
-    <button class="opt" data-val="哭泣">哭泣</button>
-  </div>
-</div>
-
-<!-- 5. 譫妄評估 -->
-<div class="card danger">
-  <h2><span class="ico">🚨</span>譫妄警訊檢查</h2>
-  <p class="hint">勾選 2 項以上,建議盡快就醫</p>
-
-  <div class="opt-grid" data-group="delirium" data-mode="multi">
-    <button class="opt" data-val="表現與平常明顯不同">表現與平常不同</button>
-    <button class="opt" data-val="注意力無法集中">無法集中注意力</button>
-    <button class="opt" data-val="說話混亂跳躍">說話混亂跳躍</button>
-    <button class="opt" data-val="嗜睡或異常警覺">嗜睡或過度警覺</button>
-    <button class="opt" data-val="認不出熟人">認不出熟人</button>
-    <button class="opt" data-val="新出現幻覺">新出現幻覺</button>
-    <button class="opt" data-val="有發燒">有發燒</button>
-    <button class="opt" data-val="排尿異常或疼痛">排尿異常</button>
-    <button class="opt" data-val="便秘超過3天">便秘超過3天</button>
-    <button class="opt" data-val="最近新增藥物">最近新增藥物</button>
-  </div>
-  <div class="warn-banner" id="delirium-warn"></div>
-</div>
-
-<!-- 6. 飲食 -->
-<div class="card mint">
-  <h2><span class="ico">🍚</span>三餐進食狀況</h2>
-  <div class="subgroup-label">早餐</div>
-  <div class="opt-grid cols-4" data-group="meal_b" data-mode="single">
-    <button class="opt" data-val="全部">全部</button>
-    <button class="opt" data-val="一半">一半</button>
-    <button class="opt" data-val="少許">少許</button>
-    <button class="opt" data-val="拒食">拒食</button>
-  </div>
-  <div class="subgroup-label">午餐</div>
-  <div class="opt-grid cols-4" data-group="meal_l" data-mode="single">
-    <button class="opt" data-val="全部">全部</button>
-    <button class="opt" data-val="一半">一半</button>
-    <button class="opt" data-val="少許">少許</button>
-    <button class="opt" data-val="拒食">拒食</button>
-  </div>
-  <div class="subgroup-label">晚餐</div>
-  <div class="opt-grid cols-4" data-group="meal_d" data-mode="single">
-    <button class="opt" data-val="全部">全部</button>
-    <button class="opt" data-val="一半">一半</button>
-    <button class="opt" data-val="少許">少許</button>
-    <button class="opt" data-val="拒食">拒食</button>
-  </div>
-</div>
-
-<!-- 7. 睡眠 -->
-<div class="card">
-  <h2><span class="ico">🌙</span>夜間睡眠</h2>
-  <div class="subgroup-label">睡眠品質</div>
-  <div class="opt-grid cols-4" data-group="sleep" data-mode="single">
-    <button class="opt" data-val="好">好</button>
-    <button class="opt" data-val="普通">普通</button>
-    <button class="opt" data-val="差">差</button>
-    <button class="opt" data-val="幾乎沒睡">幾乎沒睡</button>
-  </div>
-  <div class="subgroup-label">夜醒次數</div>
-  <div class="opt-grid cols-4" data-group="wake" data-mode="single">
-    <button class="opt" data-val="0次">0 次</button>
-    <button class="opt" data-val="1-2次">1-2 次</button>
-    <button class="opt" data-val="3-4次">3-4 次</button>
-    <button class="opt" data-val="5次以上">5 次以上</button>
-  </div>
-</div>
-
-<!-- 8. 排泄 -->
-<div class="card">
-  <h2><span class="ico">🚽</span>排泄狀況</h2>
-  <div class="subgroup-label">排尿(可複選)</div>
-  <div class="opt-grid cols-3" data-group="urine" data-mode="multi">
-    <button class="opt" data-val="正常">正常</button>
-    <button class="opt" data-val="失禁">失禁</button>
-    <button class="opt" data-val="量少">量少</button>
-    <button class="opt" data-val="顏色異常">顏色異常</button>
-    <button class="opt" data-val="排尿疼痛">排尿疼痛</button>
-  </div>
-  <div class="subgroup-label">排便</div>
-  <div class="opt-grid cols-4" data-group="stool" data-mode="single">
-    <button class="opt" data-val="正常成形">正常成形</button>
-    <button class="opt" data-val="軟便">軟便</button>
-    <button class="opt" data-val="腹瀉">腹瀉</button>
-    <button class="opt" data-val="未解便">未解便</button>
-  </div>
-</div>
-
-<!-- 9. 生活功能 -->
-<div class="card">
-  <h2><span class="ico">🤝</span>需要協助的項目</h2>
-  <p class="hint">點選今日「比平常更需要協助」的項目</p>
-  <div class="opt-grid cols-3" data-group="adl" data-mode="multi">
-    <button class="opt" data-val="進食">進食</button>
-    <button class="opt" data-val="如廁">如廁</button>
-    <button class="opt" data-val="盥洗">盥洗</button>
-    <button class="opt" data-val="洗澡">洗澡</button>
-    <button class="opt" data-val="穿衣">穿衣</button>
-    <button class="opt" data-val="行走">行走</button>
-    <button class="opt" data-val="服藥">服藥</button>
-  </div>
-</div>
-
-<!-- 10. 整體比較 -->
-<div class="card">
-  <h2><span class="ico">📈</span>與昨日比較</h2>
-  <div class="opt-grid cols-4" data-group="compare" data-mode="single">
-    <button class="opt" data-val="比較好">比較好</button>
-    <button class="opt" data-val="差不多">差不多</button>
-    <button class="opt" data-val="比較差">比較差</button>
-    <button class="opt" data-val="明顯惡化">明顯惡化</button>
-  </div>
-</div>
-
-<!-- 11. 照片 -->
-<div class="card">
-  <h2><span class="ico">📷</span>照片記錄</h2>
-  <p class="hint">可拍攝傷口、藥物、排便、皮膚異常等</p>
-  <input type="file" id="photo-input" accept="image/*" capture="environment" multiple style="display:none;" onchange="handlePhotos(event)">
-  <button class="icon-btn" onclick="document.getElementById('photo-input').click()" style="width:100%;padding:14px;">📸 拍照或選擇照片</button>
-  <div class="photo-preview" id="photo-preview"></div>
-</div>
-
-<!-- 12. 備註 -->
-<div class="card">
-  <h2><span class="ico">📝</span>備註</h2>
-  <p class="hint">特殊事件、想跟醫師說的話</p>
-  <textarea id="notes" placeholder="今日特殊狀況...(可用語音輸入)"></textarea>
-  <button class="icon-btn" id="voice-btn" onclick="toggleVoice()" style="width:100%;margin-top:8px;">🎤 語音輸入</button>
-</div>
-
-</div>
-<!-- 結束 page-record -->
-
-<!-- ===== 趨勢頁 ===== -->
-<div class="page" id="page-trend">
-
-<div class="encouragement" style="background: var(--grad-mint); box-shadow: 0 4px 14px rgba(126, 214, 167, 0.3);">
-  <div class="heart">📊</div>
-  <div>看看最近一週,家人的狀況變化吧</div>
-</div>
-
-<div class="stat-grid">
-  <div class="stat-card">
-    <div class="stat-num" id="stat-records">0</div>
-    <div class="stat-label">本週記錄筆數</div>
-  </div>
-  <div class="stat-card warm">
-    <div class="stat-num" id="stat-sundown">0</div>
-    <div class="stat-label">黃昏症候群天數</div>
-  </div>
-  <div class="stat-card danger">
-    <div class="stat-num" id="stat-warn">0</div>
-    <div class="stat-label">譫妄警訊天數</div>
-  </div>
-  <div class="stat-card mint">
-    <div class="stat-num" id="stat-good">0</div>
-    <div class="stat-label">心情好的天數</div>
-  </div>
-</div>
-
-<div class="card">
-  <h2><span class="ico">📅</span>近 7 日心情趨勢</h2>
-  <div class="mood-trend" id="mood-trend"></div>
-  <div class="trend-legend">
-    <span>😄 非常好</span>
-    <span>🙂 不錯</span>
-    <span>😐 平穩</span>
-    <span>😟 不佳</span>
-    <span>😢 很差</span>
-    <span>😠 激動</span>
-  </div>
-</div>
-
-<div class="card warn">
-  <h2><span class="ico">⚠</span>需要留意的訊號</h2>
-  <div id="alert-list" style="font-size: 13px; line-height: 1.8;"></div>
-</div>
-
-<div class="card">
-  <h2><span class="ico">📈</span>近 7 日譫妄警訊次數</h2>
-  <div class="mood-trend" id="delirium-trend"></div>
-  <p class="hint" style="text-align:center;margin-top:8px;">柱越高 = 警訊越多 · 連續高表示要回診</p>
-</div>
-
-</div>
-<!-- 結束 page-trend -->
-
-<!-- ===== 歷史頁 ===== -->
-<div class="page" id="page-history">
-
-<div style="display:flex;gap:8px;margin-bottom:12px;">
-  <button class="icon-btn" style="flex:1;padding:12px;" onclick="exportExcel()">📊 匯出 Excel</button>
-  <button class="icon-btn" style="flex:1;padding:12px;" onclick="exportJSON()">💾 備份檔案</button>
-</div>
-
-<div id="history-container"></div>
-
-</div>
-<!-- 結束 page-history -->
-
-<!-- ===== 設定頁 ===== -->
-<div class="page" id="page-settings">
-
-<div class="card">
-  <h2><span class="ico">👤</span>基本設定</h2>
-  <div class="subgroup-label">患者姓名</div>
-  <input type="text" id="cfg-patient" placeholder="例:王老先生">
-
-  <div class="subgroup-label">記錄者(每行一位)</div>
-  <textarea id="cfg-users" placeholder="例:&#10;女兒小美&#10;兒子阿明&#10;看護阿芳"></textarea>
-
-  <div class="subgroup-label">緊急聯絡電話(可選)</div>
-  <input type="tel" id="cfg-emergency" placeholder="例:0912345678(緊急時可一鍵撥打)">
-</div>
-
-<div class="card">
-  <h2><span class="ico">☁</span>雲端備份</h2>
-  <p class="hint">設定後資料會自動上傳 Google 試算表 + 每週寄報表到您的 Email</p>
-
-  <div class="subgroup-label">收件人 Email(報表收件)</div>
-  <input type="email" id="cfg-email" placeholder="您的 Gmail 信箱">
-
-  <div class="subgroup-label">Google 試算表 Web App 網址</div>
-  <input type="text" id="cfg-endpoint" placeholder="https://script.google.com/macros/s/...">
-
-  <button class="icon-btn" style="width:100%;margin-top:12px;padding:12px;background:var(--grad-main);color:white;border:none;font-weight:700;" onclick="showWizard()">
-    🪄 第一次設定?點此看 3 步驟教學
-  </button>
-</div>
-
-<div class="card">
-  <h2><span class="ico">💾</span>資料管理</h2>
-  <button class="icon-btn" style="width:100%;margin-bottom:8px;padding:12px;" onclick="importJSON()">📥 從備份檔還原</button>
-  <input type="file" id="import-input" accept=".json" style="display:none;" onchange="handleImport(event)">
-  <button class="icon-btn" style="width:100%;margin-bottom:8px;padding:12px;" onclick="testCloudConnection()">🔌 測試雲端連線</button>
-  <button class="icon-btn" style="width:100%;padding:12px;background:var(--danger-bg);color:var(--danger);" onclick="confirmClearAll()">🗑 清除所有資料</button>
-</div>
-
-<div class="card">
-  <h2><span class="ico">💗</span>關於</h2>
-  <p style="font-size:13px;color:var(--text-soft);line-height:1.7;margin:0;">
-    這是一份用心做給辛苦的照顧者使用的工具。<br>
-    每一筆記錄,都是您對家人的愛。<br><br>
-    <strong>譫妄是醫療急症</strong>,出現多項警訊請盡快就醫。常見原因:尿路感染、肺炎、脫水、便秘、新藥副作用。<br><br>
-    <strong>黃昏症候群</strong>建議:白天適度活動、傍晚保持光線充足、規律作息、減少傍晚刺激。
-  </p>
-</div>
-
-<div style="text-align:center;color:var(--text-muted);font-size:12px;padding:20px 0;">
-  💗 版本 2.0 · 暖心版 💗
-</div>
-
-<button class="icon-btn" style="width:100%;padding:14px;font-size:14px;" onclick="saveSettings()">💾 儲存所有設定</button>
-
-</div>
-<!-- 結束 page-settings -->
-
-</div>
-<!-- 結束 container -->
-
-<!-- ===== 底部動作列 ===== -->
-<div class="action-bar" id="action-bar">
-  <div class="action-bar-inner">
-    <button class="btn btn-secondary" onclick="resetForm()">清除</button>
-    <button class="btn btn-primary" id="save-btn" onclick="saveRecord()">💗 儲存今日記錄</button>
-  </div>
-</div>
-
-<!-- ===== 模態框:選擇使用者 ===== -->
-<div class="modal" id="user-modal">
-  <div class="modal-content" style="position:relative;">
-    <button class="modal-close" onclick="closeModal('user-modal')">×</button>
-    <h3>👤 請選擇記錄者</h3>
-    <div id="user-list"></div>
-    <button class="btn btn-secondary" onclick="closeModal('user-modal'); switchTab('settings')" style="width:100%;margin-top:12px;">+ 新增記錄者</button>
-  </div>
-</div>
-
-<!-- ===== 模態框:設定精靈 ===== -->
-<div class="modal" id="wizard-modal">
-  <div class="modal-content" style="position:relative;">
-    <button class="modal-close" onclick="closeModal('wizard-modal')">×</button>
-    <h3>🪄 雲端設定精靈</h3>
-    <p style="font-size:13px;color:var(--text-soft);margin:0 0 16px;">只要 3 步驟、3 分鐘搞定 ✨</p>
-
-    <div class="wizard-step">
-      <h4><span class="step-num">1</span>建立 Google 試算表</h4>
-      <div class="step-desc">點下方按鈕開新試算表,標題可改成「失智症記錄」</div>
-      <div class="step-actions">
-        <a href="https://docs.google.com/spreadsheets/create" target="_blank">📊 開啟新試算表</a>
+      <div class="quick-actions">
+        <button class="small-action" type="button" data-date-offset="-1">昨天</button>
+        <button class="small-action" type="button" data-date-offset="0">今天</button>
+        <button class="small-action" type="button" id="quickCalm">一切平穩</button>
       </div>
-    </div>
+    </section>
 
-    <div class="wizard-step">
-      <h4><span class="step-num">2</span>貼入後端程式碼</h4>
-      <div class="step-desc">在試算表上方點「擴充功能 → Apps Script」,把現有程式碼全選刪除,然後貼上下方程式碼,儲存後執行 <strong>setupAndDeploy</strong></div>
-      <div class="step-actions">
-        <button class="copy-btn" onclick="copyAppsScript()">📋 複製後端程式碼</button>
+    <section class="section" data-section="overall">
+      <div class="section-head">
+        <div>
+          <h2>今天整體狀態</h2>
+          <p class="hint">和他平常的狀態相比</p>
+        </div>
+        <span class="status-dot" aria-hidden="true"></span>
       </div>
-    </div>
+      <div class="chips three" data-field="overall" data-type="single">
+        <button class="chip" type="button" data-value="比平常好">比平常好</button>
+        <button class="chip" type="button" data-value="差不多">差不多</button>
+        <button class="chip warning" type="button" data-value="比平常差">比平常差</button>
+      </div>
+    </section>
 
-    <div class="wizard-step">
-      <h4><span class="step-num">3</span>取得網址貼回 App</h4>
-      <div class="step-desc">部署完成會出現一串 <code>https://script.google.com/macros/s/.../exec</code> 的網址,複製貼到下面的「Web App 網址」欄位,並填您的 Email,點儲存就完成囉!</div>
-    </div>
+    <section class="section" data-section="sleep">
+      <div class="section-head">
+        <div>
+          <h2>睡眠</h2>
+          <p class="hint">不需要精準計算，點大概就好</p>
+        </div>
+        <span class="status-dot" aria-hidden="true"></span>
+      </div>
+      <div class="group">
+        <div class="label">昨晚大約睡多久</div>
+        <div class="chips four" data-field="sleepHours" data-type="single">
+          <button class="chip warning" type="button" data-value="少於4小時">少於4</button>
+          <button class="chip" type="button" data-value="4到6小時">4到6</button>
+          <button class="chip" type="button" data-value="6到8小時">6到8</button>
+          <button class="chip" type="button" data-value="超過8小時">超過8</button>
+        </div>
+      </div>
+      <div class="group">
+        <div class="label">睡眠狀況</div>
+        <div class="chips" data-field="sleepIssues" data-type="multi">
+          <button class="chip" type="button" data-value="睡得安穩">睡得安穩</button>
+          <button class="chip warning" type="button" data-value="容易醒">容易醒</button>
+          <button class="chip warning" type="button" data-value="半夜走動">半夜走動</button>
+          <button class="chip warning" type="button" data-value="日夜顛倒">日夜顛倒</button>
+        </div>
+      </div>
+    </section>
 
-    <div style="margin-top:14px;padding:12px;background:var(--success-bg);border-radius:12px;font-size:13px;color:var(--text);">
-      💡 <strong>小提醒:</strong>第一次部署會請您授權,記得選自己的 Google 帳號並按「進階 → 前往(不安全)」(因為是您自己寫的程式)
-    </div>
+    <section class="section" data-section="body">
+      <div class="section-head">
+        <div>
+          <h2>身體與生活</h2>
+          <p class="hint">感染、疼痛、便秘常會讓混亂變嚴重</p>
+        </div>
+        <span class="status-dot" aria-hidden="true"></span>
+      </div>
+      <div class="group">
+        <div class="label">吃喝</div>
+        <div class="chips" data-field="foodWater" data-type="multi">
+          <button class="chip" type="button" data-value="食慾好">食慾好</button>
+          <button class="chip" type="button" data-value="食慾普通">食慾普通</button>
+          <button class="chip warning" type="button" data-value="食慾差">食慾差</button>
+          <button class="chip warning" type="button" data-value="喝水少">喝水少</button>
+          <button class="chip warning" type="button" data-value="拒絕吃喝">拒絕吃喝</button>
+        </div>
+      </div>
+      <div class="group">
+        <div class="label">排尿排便</div>
+        <div class="chips" data-field="toilet" data-type="multi">
+          <button class="chip" type="button" data-value="正常">正常</button>
+          <button class="chip warning" type="button" data-value="頻尿">頻尿</button>
+          <button class="chip warning" type="button" data-value="尿痛">尿痛</button>
+          <button class="chip warning" type="button" data-value="尿味重">尿味重</button>
+          <button class="chip warning" type="button" data-value="便秘">便秘</button>
+          <button class="chip warning" type="button" data-value="腹瀉">腹瀉</button>
+        </div>
+      </div>
+      <div class="group">
+        <div class="label">身體不適</div>
+        <div class="chips" data-field="bodySignals" data-type="multi">
+          <button class="chip" type="button" data-value="沒有不適">沒有不適</button>
+          <button class="chip warning" type="button" data-value="疼痛">疼痛</button>
+          <button class="chip warning" type="button" data-value="發燒">發燒</button>
+          <button class="chip warning" type="button" data-value="咳嗽喘">咳嗽喘</button>
+          <button class="chip warning" type="button" data-value="跌倒受傷">跌倒受傷</button>
+          <button class="chip warning" type="button" data-value="新藥或換藥">新藥或換藥</button>
+        </div>
+      </div>
+    </section>
 
-    <button class="btn btn-primary" onclick="closeModal('wizard-modal')" style="margin-top:16px;width:100%;">了解,開始設定</button>
+    <section class="section" data-section="mood">
+      <div class="section-head">
+        <div>
+          <h2>心情</h2>
+          <p class="hint">可複選，再點嚴重度</p>
+        </div>
+        <span class="status-dot" aria-hidden="true"></span>
+      </div>
+      <div class="chips" data-field="mood" data-type="multi">
+        <button class="chip" type="button" data-value="平穩">平穩</button>
+        <button class="chip warning" type="button" data-value="焦慮">焦慮</button>
+        <button class="chip warning" type="button" data-value="低落">低落</button>
+        <button class="chip warning" type="button" data-value="易怒">易怒</button>
+        <button class="chip warning" type="button" data-value="害怕">害怕</button>
+        <button class="chip warning" type="button" data-value="哭泣">哭泣</button>
+      </div>
+      <div class="group">
+        <div class="label">心情嚴重度</div>
+        <div class="severity" data-field="moodSeverity" data-type="single">
+          <button class="chip" type="button" data-value="0 無">0 無</button>
+          <button class="chip" type="button" data-value="1 輕微">1 輕微</button>
+          <button class="chip warning" type="button" data-value="2 中等">2 中等</button>
+          <button class="chip warning" type="button" data-value="3 嚴重">3 嚴重</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-section="mind">
+      <div class="section-head">
+        <div>
+          <h2>認知與注意力</h2>
+          <p class="hint">特別注意「和平常不同」</p>
+        </div>
+        <span class="status-dot" aria-hidden="true"></span>
+      </div>
+      <div class="chips" data-field="mind" data-type="multi">
+        <button class="chip" type="button" data-value="清楚">清楚</button>
+        <button class="chip warning" type="button" data-value="比平常混亂">比平常混亂</button>
+        <button class="chip warning" type="button" data-value="注意力差">注意力差</button>
+        <button class="chip warning" type="button" data-value="嗜睡叫不太醒">嗜睡叫不太醒</button>
+        <button class="chip warning" type="button" data-value="特別躁動">特別躁動</button>
+        <button class="chip warning" type="button" data-value="不認得人或地方">不認得人地</button>
+      </div>
+    </section>
+
+    <section class="section" data-section="behavior">
+      <div class="section-head">
+        <div>
+          <h2>行為</h2>
+          <p class="hint">點今天出現過的行為</p>
+        </div>
+        <span class="status-dot" aria-hidden="true"></span>
+      </div>
+      <div class="chips" data-field="behavior" data-type="multi">
+        <button class="chip warning" type="button" data-value="遊走">遊走</button>
+        <button class="chip warning" type="button" data-value="翻找東西">翻找東西</button>
+        <button class="chip warning" type="button" data-value="拒絕照護">拒絕照護</button>
+        <button class="chip warning" type="button" data-value="叫喊">叫喊</button>
+        <button class="chip warning" type="button" data-value="攻擊">攻擊</button>
+        <button class="chip warning" type="button" data-value="妄想">妄想</button>
+        <button class="chip warning" type="button" data-value="幻覺">幻覺</button>
+        <button class="chip warning" type="button" data-value="一直重複問">重複問</button>
+        <button class="chip warning" type="button" data-value="一直想回家">想回家</button>
+      </div>
+      <div class="group">
+        <div class="label">行為嚴重度</div>
+        <div class="severity" data-field="behaviorSeverity" data-type="single">
+          <button class="chip" type="button" data-value="0 無">0 無</button>
+          <button class="chip" type="button" data-value="1 輕微">1 輕微</button>
+          <button class="chip warning" type="button" data-value="2 中等">2 中等</button>
+          <button class="chip warning" type="button" data-value="3 嚴重">3 嚴重</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-section="sundowning">
+      <div class="section-head">
+        <div>
+          <h2>黃昏症候群</h2>
+          <p class="hint">下午、傍晚到夜間是否變得更混亂或焦躁</p>
+        </div>
+        <span class="status-dot" aria-hidden="true"></span>
+      </div>
+      <div class="chips three" data-field="sundowning" data-type="single">
+        <button class="chip" type="button" data-value="沒有">沒有</button>
+        <button class="chip warning" type="button" data-value="疑似">疑似</button>
+        <button class="chip warning" type="button" data-value="明顯">明顯</button>
+      </div>
+      <div class="group">
+        <div class="label">大約時段</div>
+        <div class="chips four" data-field="sundowningTime" data-type="single">
+          <button class="chip" type="button" data-value="15-17點">15-17</button>
+          <button class="chip" type="button" data-value="17-19點">17-19</button>
+          <button class="chip" type="button" data-value="19-21點">19-21</button>
+          <button class="chip" type="button" data-value="21點後">21後</button>
+        </div>
+      </div>
+      <div class="group">
+        <div class="label">出現症狀</div>
+        <div class="chips" data-field="sundowningSymptoms" data-type="multi">
+          <button class="chip warning" type="button" data-value="焦躁">焦躁</button>
+          <button class="chip warning" type="button" data-value="混亂">混亂</button>
+          <button class="chip warning" type="button" data-value="遊走">遊走</button>
+          <button class="chip warning" type="button" data-value="幻覺妄想">幻覺妄想</button>
+          <button class="chip warning" type="button" data-value="害怕">害怕</button>
+          <button class="chip warning" type="button" data-value="不睡">不睡</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-section="delirium">
+      <div class="section-head">
+        <div>
+          <h2>譫妄警訊</h2>
+          <p class="hint">譫妄常是突然發生、一天內忽好忽壞</p>
+        </div>
+        <span class="status-dot" aria-hidden="true"></span>
+      </div>
+      <div class="chips" data-field="delirium" data-type="multi">
+        <button class="chip warning" type="button" data-value="數小時到幾天內突然變混亂">突然變混亂</button>
+        <button class="chip warning" type="button" data-value="一天內忽好忽壞">忽好忽壞</button>
+        <button class="chip warning" type="button" data-value="注意力明顯變差">注意力變差</button>
+        <button class="chip warning" type="button" data-value="嗜睡或叫不太醒">嗜睡叫不醒</button>
+        <button class="chip warning" type="button" data-value="發燒或疑似感染">發燒感染</button>
+        <button class="chip warning" type="button" data-value="跌倒後變怪">跌倒後變怪</button>
+      </div>
+      <div id="deliriumAlert" class="alert" role="status">
+        有譫妄警訊時，請盡快聯絡醫師。若突然叫不醒、跌倒後意識改變、呼吸困難或高燒，建議立即就醫。
+      </div>
+    </section>
+
+    <section class="section" data-section="support">
+      <div class="section-head">
+        <div>
+          <h2>可能誘因與安撫方式</h2>
+          <p class="hint">這些能幫忙找出下次怎麼預防</p>
+        </div>
+        <span class="status-dot" aria-hidden="true"></span>
+      </div>
+      <div class="group">
+        <div class="label">可能誘因</div>
+        <div class="chips" data-field="triggers" data-type="multi">
+          <button class="chip warning" type="button" data-value="睡不好">睡不好</button>
+          <button class="chip warning" type="button" data-value="疼痛">疼痛</button>
+          <button class="chip warning" type="button" data-value="便秘">便秘</button>
+          <button class="chip warning" type="button" data-value="尿路感染疑慮">尿路感染疑慮</button>
+          <button class="chip warning" type="button" data-value="太吵或太暗">太吵太暗</button>
+          <button class="chip warning" type="button" data-value="陌生環境">陌生環境</button>
+          <button class="chip warning" type="button" data-value="換照護者">換照護者</button>
+          <button class="chip warning" type="button" data-value="藥物改變">藥物改變</button>
+        </div>
+      </div>
+      <div class="group">
+        <div class="label">安撫方式</div>
+        <div class="chips" data-field="comfort" data-type="multi">
+          <button class="chip" type="button" data-value="陪伴">陪伴</button>
+          <button class="chip" type="button" data-value="音樂">音樂</button>
+          <button class="chip" type="button" data-value="散步">散步</button>
+          <button class="chip" type="button" data-value="開燈">開燈</button>
+          <button class="chip" type="button" data-value="喝水點心">喝水點心</button>
+          <button class="chip" type="button" data-value="如廁">如廁</button>
+          <button class="chip" type="button" data-value="降低聲音">降低聲音</button>
+          <button class="chip" type="button" data-value="戴眼鏡或助聽器">眼鏡助聽器</button>
+        </div>
+      </div>
+      <div class="group">
+        <div class="label">是否有效</div>
+        <div class="chips three" data-field="comfortEffect" data-type="single">
+          <button class="chip" type="button" data-value="有效">有效</button>
+          <button class="chip" type="button" data-value="部分有效">部分有效</button>
+          <button class="chip warning" type="button" data-value="無效">無效</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="summaryTitle">
+      <div class="section-head">
+        <div>
+          <h2 id="summaryTitle">今天摘要</h2>
+          <p class="hint">儲存前先看一次，空白項目會自動略過</p>
+        </div>
+      </div>
+      <div id="summary" class="summary"></div>
+    </section>
+
+    <section class="section records" aria-labelledby="recordsTitle">
+      <div class="section-head">
+        <div>
+          <h2 id="recordsTitle">已存紀錄</h2>
+          <p class="hint">本機先存一份，雲端同步後換手機也能下載</p>
+        </div>
+      </div>
+      <div class="quick-actions">
+        <button class="small-action" type="button" id="exportCsv">匯出 CSV</button>
+        <button class="small-action" type="button" id="copySummary">複製摘要</button>
+        <button class="small-action" type="button" id="clearToday">清空今天</button>
+      </div>
+      <div id="recordList" class="record-list"></div>
+    </section>
+
+    <section class="section" aria-labelledby="cloudTitle">
+      <div class="section-head">
+        <div>
+          <h2 id="cloudTitle">雲端同步</h2>
+          <p class="hint">使用 Supabase 登入後，可把紀錄同步到雲端資料庫</p>
+        </div>
+      </div>
+      <div class="cloud-grid">
+        <div id="cloudStatus" class="cloud-status warn">尚未設定雲端。先建立 Supabase 專案並執行 SQL，再填入網址與 anon key。</div>
+        <div class="input-grid">
+          <label class="field">
+            <span>Supabase Project URL</span>
+            <input id="cloudUrl" type="url" inputmode="url" autocomplete="off" placeholder="https://xxxx.supabase.co">
+          </label>
+          <label class="field">
+            <span>Supabase anon public key</span>
+            <input id="cloudKey" type="password" autocomplete="off" placeholder="eyJ...">
+          </label>
+        </div>
+        <div class="input-grid two">
+          <label class="field">
+            <span>登入 Email</span>
+            <input id="cloudEmail" type="email" inputmode="email" autocomplete="username" placeholder="you@example.com">
+          </label>
+          <label class="field">
+            <span>密碼</span>
+            <input id="cloudPassword" type="password" autocomplete="current-password" placeholder="至少 6 位">
+          </label>
+        </div>
+        <div class="cloud-actions">
+          <button class="small-action" type="button" id="saveCloudConfig">儲存設定</button>
+          <button class="small-action" type="button" id="signUpCloud">建立帳號</button>
+          <button class="small-action" type="button" id="signInCloud">登入</button>
+          <button class="small-action" type="button" id="signOutCloud">登出</button>
+          <button class="small-action" type="button" id="uploadCloud">上傳雲端</button>
+          <button class="small-action" type="button" id="downloadCloud">下載雲端</button>
+        </div>
+        <p class="privacy-note">按「上傳雲端」才會把本機紀錄傳到你的 Supabase 專案。此資料可能包含健康照護資訊，建議只使用你信任且有登入保護的資料庫。</p>
+      </div>
+    </section>
+  </main>
+
+  <div class="bottom-bar">
+    <div class="bottom-inner">
+      <button class="primary" type="button" id="saveRecord">儲存今天</button>
+      <button class="secondary" type="button" id="scrollSummary">看摘要</button>
+    </div>
   </div>
-</div>
 
-<!-- ===== 慶祝彈窗 ===== -->
-<div class="celebrate" id="celebrate">
-  <div class="celebrate-content">
-    <div class="emoji-big" id="celebrate-emoji">💗</div>
-    <h3 id="celebrate-title">儲存成功!</h3>
-    <p id="celebrate-text">辛苦您了,今天也好好照顧自己 💕</p>
-    <button class="btn btn-primary" onclick="closeCelebrate()" style="width:100%;">好的</button>
-  </div>
-</div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-<div class="toast" id="toast"></div>
+  <script>
+    const storageKey = "dementiaDailyTapRecords.v1";
+    const cloudConfigKey = "dementiaDailyTapCloud.v1";
+    const supabaseCdn = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+    const fields = [
+      ["overall", "整體"],
+      ["sleepHours", "睡眠時間"],
+      ["sleepIssues", "睡眠狀況"],
+      ["foodWater", "吃喝"],
+      ["toilet", "排尿排便"],
+      ["bodySignals", "身體不適"],
+      ["mood", "心情"],
+      ["moodSeverity", "心情嚴重度"],
+      ["mind", "認知注意力"],
+      ["behavior", "行為"],
+      ["behaviorSeverity", "行為嚴重度"],
+      ["sundowning", "黃昏症候群"],
+      ["sundowningTime", "黃昏時段"],
+      ["sundowningSymptoms", "黃昏症狀"],
+      ["delirium", "譫妄警訊"],
+      ["triggers", "可能誘因"],
+      ["comfort", "安撫方式"],
+      ["comfortEffect", "安撫效果"]
+    ];
 
-<script>
-// ============================================
-// 暖心照護日誌 v2.0
-// ============================================
+    const state = {};
+    const dateInput = document.querySelector("#recordDate");
+    const summaryEl = document.querySelector("#summary");
+    const recordList = document.querySelector("#recordList");
+    const deliriumAlert = document.querySelector("#deliriumAlert");
+    const toast = document.querySelector("#toast");
+    const cloudStatus = document.querySelector("#cloudStatus");
+    const cloudUrlInput = document.querySelector("#cloudUrl");
+    const cloudKeyInput = document.querySelector("#cloudKey");
+    const cloudEmailInput = document.querySelector("#cloudEmail");
+    const cloudPasswordInput = document.querySelector("#cloudPassword");
+    let supabaseClient = null;
 
-// ===== 狀態管理 =====
-const state = {
-  data: {},
-  photos: [],
-  notes: '',
-  currentUser: '',
-  config: {
-    patient: '',
-    users: [],
-    endpoint: '',
-    email: '',
-    emergency: '',
-    onboarded: false
-  }
-};
+    function todayValue(offset = 0) {
+      const date = new Date();
+      date.setDate(date.getDate() + offset);
+      const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+      return local.toISOString().slice(0, 10);
+    }
 
-const today = new Date();
-const dateKey = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
-const weekDays = ['日','一','二','三','四','五','六'];
-
-// 動態問候語
-function getGreeting() {
-  const hour = today.getHours();
-  const greetings = {
-    morning: ['早安,今天也辛苦你了 ☀', '美好的一天開始了 🌸', '今天記得吃早餐唷 🥞'],
-    noon: ['午安,記得喘口氣 🌼', '中午好,別忘了休息 ☕', '辛苦了,中午吃飯囉 🍱'],
-    afternoon: ['午後時光,記得多喝水 💧', '下午也加油 💪', '辛苦你了,慢慢來 🌷'],
-    evening: ['傍晚到了,留意黃昏症候群 🌅', '晚安前一刻,辛苦了 🌙', '今天也撐過來了,你好棒 ⭐'],
-    night: ['夜深了,記錄完早點休息 🌙', '辛苦的一天,擁抱自己 💤', '晚安,你已經做得很好了 🌟']
-  };
-  let key;
-  if (hour < 11) key = 'morning';
-  else if (hour < 13) key = 'noon';
-  else if (hour < 17) key = 'afternoon';
-  else if (hour < 20) key = 'evening';
-  else key = 'night';
-  const arr = greetings[key];
-  return arr[today.getDate() % arr.length];
-}
-
-// 鼓勵小語(每日不同)
-const encouragements = [
-  '您每一份記錄,都是給家人最溫柔的守護 💕',
-  '辛苦的照顧者,別忘了也要愛自己 🌷',
-  '一天一點記錄,日積月累就是最珍貴的回憶 📖',
-  '您不是一個人在戰鬥,有我陪著您 🤗',
-  '專業的照顧需要好工具,我會努力陪伴 ✨',
-  '今天的細節,可能是醫師明天的關鍵線索 🔍',
-  '愛是世界上最有力量的藥 💗'
-];
-
-document.getElementById('today-date').textContent = dateKey.replace(/-/g,'/') + ' 星期' + weekDays[today.getDay()];
-document.getElementById('greeting-title').textContent = getGreeting();
-document.getElementById('encourage-text').textContent = encouragements[today.getDate() % encouragements.length];
-
-// ===== 初始化點選按鈕 =====
-document.querySelectorAll('.opt-grid').forEach(grid => {
-  const group = grid.dataset.group;
-  const mode = grid.dataset.mode;
-  state.data[group] = mode === 'multi' ? [] : null;
-
-  grid.querySelectorAll('.opt').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const val = btn.dataset.val;
-      if (mode === 'single') {
-        grid.querySelectorAll('.opt').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-        state.data[group] = val;
-      } else {
-        if (btn.classList.contains('selected')) {
-          btn.classList.remove('selected');
-          state.data[group] = state.data[group].filter(v => v !== val);
-        } else {
-          btn.classList.add('selected');
-          state.data[group].push(val);
-        }
+    function loadRecords() {
+      try {
+        return JSON.parse(localStorage.getItem(storageKey)) || [];
+      } catch {
+        return [];
       }
-      if (group === 'delirium') updateDeliriumWarn();
-      autosaveDraft();
-    });
-  });
-});
-
-// 譫妄警示
-function updateDeliriumWarn() {
-  const warn = document.getElementById('delirium-warn');
-  const count = state.data.delirium.length;
-  if (count >= 2) {
-    warn.classList.add('show');
-    let actions = '';
-    if (state.config.emergency) {
-      actions = `<div class="actions">
-        <a href="tel:${state.config.emergency}">📞 撥打緊急聯絡</a>
-        <a href="tel:119">📞 119 救護車</a>
-      </div>`;
-    } else {
-      actions = `<div class="actions">
-        <a href="tel:119">📞 撥打 119</a>
-      </div>`;
     }
-    warn.innerHTML = '⚠ 已勾選 ' + count + ' 項警訊,建議盡快就醫評估。<br>常見原因:尿路感染、肺炎、脫水、便秘、新藥副作用' + actions;
-  } else if (count === 1) {
-    warn.classList.add('show');
-    warn.textContent = '已勾選 1 項,請持續觀察,若再增加項目請就醫';
-  } else {
-    warn.classList.remove('show');
-  }
-}
 
-// ===== Toast 提示 =====
-function toast(msg, type) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast show' + (type ? ' ' + type : '');
-  setTimeout(() => { t.className = 'toast'; }, 2500);
-}
+    function saveRecords(records) {
+      localStorage.setItem(storageKey, JSON.stringify(records));
+    }
 
-// ===== 模態框 =====
-function showConfig() { switchTab('settings'); }
-function showWizard() { document.getElementById('wizard-modal').classList.add('active'); }
-function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+    function loadCloudConfig() {
+      try {
+        return JSON.parse(localStorage.getItem(cloudConfigKey)) || {};
+      } catch {
+        return {};
+      }
+    }
 
-// ===== 分頁切換 =====
-function switchTab(name) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.page === name));
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + name).classList.add('active');
-  document.getElementById('action-bar').style.display = (name === 'record') ? 'flex' : 'none';
-
-  if (name === 'trend') renderTrend();
-  if (name === 'history') renderHistory();
-  if (name === 'settings') loadSettingsToForm();
-  window.scrollTo(0, 0);
-}
-
-// ===== 設定載入/儲存 =====
-function loadSettingsToForm() {
-  document.getElementById('cfg-patient').value = state.config.patient || '';
-  document.getElementById('cfg-users').value = (state.config.users || []).join('\n');
-  document.getElementById('cfg-endpoint').value = state.config.endpoint || '';
-  document.getElementById('cfg-email').value = state.config.email || '';
-  document.getElementById('cfg-emergency').value = state.config.emergency || '';
-}
-
-function saveSettings() {
-  state.config.patient = document.getElementById('cfg-patient').value.trim();
-  state.config.users = document.getElementById('cfg-users').value.split('\n').map(s=>s.trim()).filter(Boolean);
-  state.config.endpoint = document.getElementById('cfg-endpoint').value.trim();
-  state.config.email = document.getElementById('cfg-email').value.trim();
-  state.config.emergency = document.getElementById('cfg-emergency').value.trim();
-  localStorage.setItem('dementia_config', JSON.stringify(state.config));
-  updateConfigUI();
-  toast('💗 設定已儲存', 'success');
-
-  // 如果只有 1 位記錄者,自動選定
-  if (state.config.users.length === 1 && !state.currentUser) {
-    setUser(state.config.users[0]);
-  }
-}
-
-function updateConfigUI() {
-  document.getElementById('config-warning').style.display = state.config.endpoint ? 'none' : 'flex';
-}
-
-// ===== 使用者選擇 =====
-function showUserPicker() {
-  const list = document.getElementById('user-list');
-  if (!state.config.users.length) {
-    list.innerHTML = '<div class="empty-state"><div class="big-emoji">👋</div><p>還沒設定記錄者<br>請先到「設定」頁新增</p></div>';
-  } else {
-    list.innerHTML = state.config.users.map(u =>
-      `<div class="history-item" onclick="setUser('${u.replace(/'/g,"\\'")}')">${u}</div>`
-    ).join('');
-  }
-  document.getElementById('user-modal').classList.add('active');
-}
-
-function setUser(name) {
-  state.currentUser = name;
-  document.getElementById('current-user').textContent = name;
-  localStorage.setItem('dementia_current_user', name);
-  closeModal('user-modal');
-}
-
-// ===== 照片處理 =====
-function handlePhotos(event) {
-  const files = Array.from(event.target.files);
-  if (!files.length) return;
-  if (state.photos.length + files.length > 10) {
-    toast('一筆記錄最多 10 張照片', 'error');
-    return;
-  }
-  files.forEach(file => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const maxDim = 1024;
-        let { width, height } = img;
-        if (width > height && width > maxDim) { height *= maxDim/width; width = maxDim; }
-        else if (height > maxDim) { width *= maxDim/height; height = maxDim; }
-        canvas.width = width; canvas.height = height;
-        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-        const compressed = canvas.toDataURL('image/jpeg', 0.7);
-        state.photos.push(compressed);
-        renderPhotos();
-        autosaveDraft();
+    function getCloudConfigFromInputs() {
+      return {
+        url: cloudUrlInput.value.trim(),
+        key: cloudKeyInput.value.trim(),
+        email: cloudEmailInput.value.trim()
       };
-      img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-  });
-  event.target.value = '';
-}
-
-function renderPhotos() {
-  const preview = document.getElementById('photo-preview');
-  preview.innerHTML = state.photos.map((p, i) =>
-    `<div class="photo-item">
-      <img src="${p}" alt="照片">
-      <button class="photo-remove" onclick="removePhoto(${i})">×</button>
-    </div>`
-  ).join('');
-}
-
-function removePhoto(i) {
-  if (!confirm('要刪除這張照片嗎?')) return;
-  state.photos.splice(i, 1);
-  renderPhotos();
-  autosaveDraft();
-}
-
-// ===== 語音輸入 =====
-let recognition = null;
-let isRecording = false;
-
-function toggleVoice() {
-  if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
-    toast('此瀏覽器不支援語音輸入,請改用 Chrome / Safari', 'error');
-    return;
-  }
-  const btn = document.getElementById('voice-btn');
-  if (isRecording) { recognition.stop(); return; }
-
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  recognition = new SR();
-  recognition.lang = 'zh-TW';
-  recognition.continuous = true;
-  recognition.interimResults = true;
-
-  let finalText = document.getElementById('notes').value;
-
-  recognition.onstart = () => {
-    isRecording = true;
-    btn.classList.add('recording');
-    btn.textContent = '🔴 錄音中,點此停止';
-  };
-  recognition.onresult = (event) => {
-    let interim = '';
-    for (let i = event.resultIndex; i < event.results.length; i++) {
-      if (event.results[i].isFinal) finalText += event.results[i][0].transcript;
-      else interim += event.results[i][0].transcript;
     }
-    document.getElementById('notes').value = finalText + interim;
-  };
-  recognition.onerror = (e) => { toast('語音辨識錯誤:' + e.error, 'error'); stopVoice(); };
-  recognition.onend = () => stopVoice();
-  recognition.start();
-}
 
-function stopVoice() {
-  isRecording = false;
-  const btn = document.getElementById('voice-btn');
-  btn.classList.remove('recording');
-  btn.textContent = '🎤 語音輸入';
-  autosaveDraft();
-}
+    function applyCloudConfig() {
+      const config = loadCloudConfig();
+      cloudUrlInput.value = config.url || "";
+      cloudKeyInput.value = config.key || "";
+      cloudEmailInput.value = config.email || "";
+      if (config.url && config.key) {
+        setCloudStatus("雲端設定已儲存。請登入後同步。");
+      }
+    }
 
-// ===== 自動儲存草稿 =====
-let draftTimer = null;
-function autosaveDraft() {
-  clearTimeout(draftTimer);
-  draftTimer = setTimeout(() => {
-    const draft = {
-      date: dateKey,
-      data: state.data,
-      notes: document.getElementById('notes').value,
-      photos: state.photos
-    };
-    try { localStorage.setItem('dementia_draft_' + dateKey, JSON.stringify(draft)); } catch(e) {}
-  }, 500);
-}
+    function setCloudStatus(message, tone = "ok") {
+      cloudStatus.textContent = message;
+      cloudStatus.classList.toggle("warn", tone === "warn");
+    }
 
-// ===== 儲存記錄 =====
-async function saveRecord() {
-  if (!state.currentUser) {
-    toast('請先選擇記錄者', 'error');
-    showUserPicker();
-    return;
-  }
-  if (!state.data.mood) {
-    toast('請至少選擇今日整體心情 💕', 'error');
-    window.scrollTo(0, 0);
-    return;
-  }
+    function saveCloudConfig() {
+      const config = getCloudConfigFromInputs();
+      if (!config.url || !config.key) {
+        setCloudStatus("請先填入 Supabase Project URL 和 anon public key。", "warn");
+        return false;
+      }
+      localStorage.setItem(cloudConfigKey, JSON.stringify(config));
+      supabaseClient = null;
+      setCloudStatus("雲端設定已儲存。接著登入或建立帳號。");
+      showToast("雲端設定已儲存");
+      return true;
+    }
 
-  state.notes = document.getElementById('notes').value.trim();
-
-  const record = {
-    date: dateKey,
-    weekday: weekDays[today.getDay()],
-    saved_at: new Date().toISOString(),
-    user: state.currentUser,
-    patient: state.config.patient,
-    data: JSON.parse(JSON.stringify(state.data)),
-    notes: state.notes,
-    photos: state.photos,
-    photo_count: state.photos.length
-  };
-
-  // 1. 存本機
-  const localKey = 'log_' + dateKey + '_' + Date.now();
-  try {
-    localStorage.setItem(localKey, JSON.stringify(record));
-  } catch (e) {
-    toast('本機空間不足,請刪除一些舊照片或舊記錄', 'error');
-    return;
-  }
-
-  // 清掉草稿
-  localStorage.removeItem('dementia_draft_' + dateKey);
-
-  // 2. 上傳雲端
-  if (state.config.endpoint) {
-    const btn = document.getElementById('save-btn');
-    btn.disabled = true;
-    btn.textContent = '雲端上傳中...';
-    try {
-      await fetch(state.config.endpoint, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(record)
+    function ensureSupabaseLib() {
+      if (window.supabase) return Promise.resolve();
+      return new Promise((resolve, reject) => {
+        const existing = document.querySelector(`script[src="${supabaseCdn}"]`);
+        if (existing) {
+          existing.addEventListener("load", resolve, { once: true });
+          existing.addEventListener("error", reject, { once: true });
+          return;
+        }
+        const script = document.createElement("script");
+        script.src = supabaseCdn;
+        script.onload = resolve;
+        script.onerror = () => reject(new Error("無法載入 Supabase，同步需要網路連線。"));
+        document.head.appendChild(script);
       });
-      celebrateSave(true);
-    } catch (e) {
-      celebrateSave(false);
     }
-    btn.disabled = false;
-    btn.textContent = '💗 儲存今日記錄';
-  } else {
-    celebrateSave(null);
-  }
-}
 
-function celebrateSave(cloudOK) {
-  const emoji = ['🌸', '💗', '🌟', '🎉', '✨', '🌈', '🎀'][Math.floor(Math.random() * 7)];
-  document.getElementById('celebrate-emoji').textContent = emoji;
-  document.getElementById('celebrate-title').textContent = '記錄成功!';
-
-  let text;
-  if (cloudOK === true) {
-    text = '已存到本機 + 雲端 ☁\n辛苦您了,記得照顧好自己 💕';
-  } else if (cloudOK === false) {
-    text = '已存本機,雲端稍後重試\n辛苦您了 💕';
-  } else {
-    text = '已存到本機 ✓\n設定雲端後可自動備份多裝置 💕';
-  }
-  document.getElementById('celebrate-text').textContent = text;
-  document.getElementById('celebrate').classList.add('show');
-}
-
-function closeCelebrate() {
-  document.getElementById('celebrate').classList.remove('show');
-}
-
-function resetForm() {
-  if (!confirm('確定要清除目前所有選擇嗎?')) return;
-  document.querySelectorAll('.opt.selected').forEach(b => b.classList.remove('selected'));
-  Object.keys(state.data).forEach(k => {
-    state.data[k] = Array.isArray(state.data[k]) ? [] : null;
-  });
-  state.photos = [];
-  renderPhotos();
-  document.getElementById('notes').value = '';
-  document.getElementById('delirium-warn').classList.remove('show');
-  localStorage.removeItem('dementia_draft_' + dateKey);
-  toast('已清除');
-}
-
-// ===== 取得所有記錄 =====
-function getAllRecords() {
-  const records = [];
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    if (key.startsWith('log_')) {
-      try { records.push(JSON.parse(localStorage.getItem(key))); } catch(e) {}
+    async function getSupabaseClient() {
+      const config = loadCloudConfig();
+      if (!config.url || !config.key) {
+        throw new Error("尚未儲存 Supabase 設定。");
+      }
+      await ensureSupabaseLib();
+      if (!supabaseClient) {
+        supabaseClient = window.supabase.createClient(config.url, config.key, {
+          auth: {
+            persistSession: true,
+            autoRefreshToken: true,
+            storageKey: "dementia-care-cloud-auth"
+          }
+        });
+      }
+      return supabaseClient;
     }
-  }
-  return records;
-}
 
-// ===== 歷史記錄 =====
-function renderHistory() {
-  const records = getAllRecords();
-  records.sort((a,b) => b.saved_at.localeCompare(a.saved_at));
-
-  const container = document.getElementById('history-container');
-  if (!records.length) {
-    container.innerHTML = `
-      <div class="card empty-state">
-        <div class="big-emoji">📋</div>
-        <p>還沒有記錄<br>從今天開始累積吧 💕</p>
-      </div>
-    `;
-    return;
-  }
-
-  // 按日期分組
-  const byDate = {};
-  records.forEach(r => {
-    if (!byDate[r.date]) byDate[r.date] = [];
-    byDate[r.date].push(r);
-  });
-
-  container.innerHTML = Object.keys(byDate).slice(0, 60).map(date => {
-    const dayRecords = byDate[date];
-    const latest = dayRecords[0];
-    const deliriumCount = (latest.data.delirium || []).length;
-    const t = new Date(latest.saved_at);
-    const time = t.getHours().toString().padStart(2,'0') + ':' + t.getMinutes().toString().padStart(2,'0');
-    const moodEmoji = { '非常好': '😄', '不錯': '🙂', '平穩': '😐', '不佳': '😟', '很差': '😢', '激動': '😠' }[latest.data.mood] || '🤍';
-
-    return `<div class="history-item" onclick="showRecordDetail('${latest.saved_at}')">
-      <div class="history-date">
-        ${moodEmoji} ${date} 星期${latest.weekday || ''}
-        ${deliriumCount >= 2 ? '<span class="badge-warning">⚠ 譫妄警訊 '+deliriumCount+'</span>' : ''}
-        ${dayRecords.length > 1 ? '<span style="font-size:11px;color:var(--text-muted);">('+dayRecords.length+'筆)</span>' : ''}
-      </div>
-      <div class="history-meta">
-        ⏰ ${time} · 👤 ${latest.user || '未設定'}<br>
-        💭 ${latest.data.mood || '-'} · 🌅 ${latest.data.sundown_level || '-'} · 📷 ${latest.photo_count||0} 張
-        ${latest.notes ? '<br>📝 ' + latest.notes.substring(0, 40) + (latest.notes.length > 40 ? '...' : '') : ''}
-      </div>
-    </div>`;
-  }).join('');
-}
-
-// ===== 趨勢分析 =====
-function renderTrend() {
-  const records = getAllRecords();
-  const now = new Date();
-  const sevenDaysAgo = new Date(now);
-  sevenDaysAgo.setDate(now.getDate() - 6);
-  sevenDaysAgo.setHours(0,0,0,0);
-
-  const recentRecords = records.filter(r => new Date(r.saved_at) >= sevenDaysAgo);
-
-  // 統計
-  let sundownDays = 0, warnDays = 0, goodDays = 0;
-  const byDate = {};
-  recentRecords.forEach(r => {
-    if (!byDate[r.date] || r.saved_at > byDate[r.date].saved_at) {
-      byDate[r.date] = r;
+    async function getCloudUser() {
+      const client = await getSupabaseClient();
+      const { data, error } = await client.auth.getUser();
+      if (error || !data.user) {
+        throw new Error("請先登入雲端帳號。");
+      }
+      return { client, user: data.user };
     }
-  });
 
-  Object.values(byDate).forEach(r => {
-    if (r.data.sundown_level && ['輕微','明顯','嚴重'].includes(r.data.sundown_level)) sundownDays++;
-    if ((r.data.delirium||[]).length >= 2) warnDays++;
-    if (['非常好','不錯'].includes(r.data.mood)) goodDays++;
-  });
-
-  document.getElementById('stat-records').textContent = Object.keys(byDate).length;
-  document.getElementById('stat-sundown').textContent = sundownDays;
-  document.getElementById('stat-warn').textContent = warnDays;
-  document.getElementById('stat-good').textContent = goodDays;
-
-  // 心情趨勢圖
-  const moodScore = { '非常好': 6, '不錯': 5, '平穩': 4, '不佳': 3, '很差': 2, '激動': 1 };
-  const moodEmoji = { '非常好': '😄', '不錯': '🙂', '平穩': '😐', '不佳': '😟', '很差': '😢', '激動': '😠' };
-
-  const trendContainer = document.getElementById('mood-trend');
-  let trendHTML = '';
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date(now);
-    d.setDate(now.getDate() - i);
-    const dStr = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
-    const r = byDate[dStr];
-    if (r && r.data.mood) {
-      const score = moodScore[r.data.mood] || 0;
-      const heightPct = (score / 6) * 100;
-      trendHTML += `<div class="trend-day">
-        <span class="trend-emoji">${moodEmoji[r.data.mood]}</span>
-        <div class="trend-bar" style="height:${heightPct}%;"></div>
-        <span class="trend-day-label">${d.getMonth()+1}/${d.getDate()}</span>
-      </div>`;
-    } else {
-      trendHTML += `<div class="trend-day">
-        <span class="trend-emoji" style="opacity:0.3;">·</span>
-        <div class="trend-bar empty"></div>
-        <span class="trend-day-label">${d.getMonth()+1}/${d.getDate()}</span>
-      </div>`;
+    function normalizeField(field) {
+      const group = document.querySelector(`[data-field="${field}"]`);
+      if (!group) return [];
+      return group.dataset.type === "multi" ? [] : "";
     }
-  }
-  trendContainer.innerHTML = trendHTML;
 
-  // 譫妄趨勢
-  const deliriumContainer = document.getElementById('delirium-trend');
-  let dHTML = '';
-  let maxD = 1;
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date(now);
-    d.setDate(now.getDate() - i);
-    const dStr = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
-    const r = byDate[dStr];
-    const cnt = r ? (r.data.delirium||[]).length : 0;
-    if (cnt > maxD) maxD = cnt;
-  }
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date(now);
-    d.setDate(now.getDate() - i);
-    const dStr = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
-    const r = byDate[dStr];
-    const cnt = r ? (r.data.delirium||[]).length : 0;
-    const heightPct = maxD ? (cnt / maxD) * 100 : 0;
-    const color = cnt >= 2 ? 'var(--grad-danger)' : cnt === 1 ? 'var(--grad-warm)' : 'var(--grad-mint)';
-    dHTML += `<div class="trend-day">
-      <span class="trend-emoji" style="font-size:14px;font-weight:700;color:var(--text);">${cnt}</span>
-      <div class="trend-bar ${cnt === 0 ? 'empty' : ''}" style="height:${cnt === 0 ? 8 : heightPct + '%'}; background:${color};"></div>
-      <span class="trend-day-label">${d.getMonth()+1}/${d.getDate()}</span>
-    </div>`;
-  }
-  deliriumContainer.innerHTML = dHTML;
+    function resetState() {
+      fields.forEach(([field]) => {
+        state[field] = normalizeField(field);
+      });
+    }
 
-  // 警示分析
-  const alerts = [];
-  if (warnDays >= 2) alerts.push('🚨 本週有 ' + warnDays + ' 天譫妄警訊達 2 項以上,強烈建議回診');
-  if (sundownDays >= 4) alerts.push('🌅 黃昏症候群頻繁(本週' + sundownDays + '天),可調整作息與環境光線');
+    function setChipPressed(button, pressed) {
+      button.setAttribute("aria-pressed", pressed ? "true" : "false");
+    }
 
-  // 連續食慾不振
-  let badMealDays = 0;
-  Object.values(byDate).forEach(r => {
-    if (['少許','拒食'].includes(r.data.meal_b) || ['少許','拒食'].includes(r.data.meal_l) || ['少許','拒食'].includes(r.data.meal_d)) badMealDays++;
-  });
-  if (badMealDays >= 3) alerts.push('🍚 飲食狀況不佳('+badMealDays+'天),可諮詢營養師');
+    function syncButtons() {
+      document.querySelectorAll("[data-field]").forEach(group => {
+        const field = group.dataset.field;
+        const value = state[field];
+        group.querySelectorAll(".chip").forEach(button => {
+          const selected = Array.isArray(value)
+            ? value.includes(button.dataset.value)
+            : value === button.dataset.value;
+          setChipPressed(button, selected);
+        });
+      });
+      document.querySelectorAll(".section[data-section]").forEach(section => {
+        const selected = [...section.querySelectorAll("[data-field]")].some(group => {
+          const value = state[group.dataset.field];
+          return Array.isArray(value) ? value.length > 0 : Boolean(value);
+        });
+        section.dataset.touched = selected ? "true" : "false";
+      });
+      deliriumAlert.classList.toggle("show", Array.isArray(state.delirium) && state.delirium.length > 0);
+    }
 
-  // 睡眠不佳
-  let badSleepDays = 0;
-  Object.values(byDate).forEach(r => {
-    if (['差','幾乎沒睡'].includes(r.data.sleep)) badSleepDays++;
-  });
-  if (badSleepDays >= 3) alerts.push('🌙 睡眠品質差('+badSleepDays+'天),可與醫師討論');
+    function renderSummary() {
+      const rows = fields
+        .map(([field, label]) => {
+          const value = state[field];
+          const text = Array.isArray(value) ? value.join("、") : value;
+          return text ? { label, text } : null;
+        })
+        .filter(Boolean);
 
-  if (alerts.length === 0) {
-    alerts.push('✨ 本週沒有明顯異常,維持得很好!');
-  }
-
-  document.getElementById('alert-list').innerHTML = alerts.map(a => '<div style="padding:6px 0;">' + a + '</div>').join('');
-}
-
-// ===== 顯示某筆記錄詳情 =====
-function showRecordDetail(savedAt) {
-  const all = getAllRecords();
-  const r = all.find(x => x.saved_at === savedAt);
-  if (!r) return;
-
-  const fields = [
-    ['💭 整體心情', r.data.mood],
-    ['😌 主要情緒', (r.data.emotion||[]).join('、')],
-    ['👀 行為觀察', (r.data.behavior||[]).join('、')],
-    ['🌅 黃昏程度', r.data.sundown_level],
-    ['🌅 黃昏症狀', (r.data.sundown_sym||[]).join('、')],
-    ['🚨 譫妄警訊', (r.data.delirium||[]).join('、') + ' (' + (r.data.delirium||[]).length + '項)'],
-    ['🍱 早/午/晚餐', [r.data.meal_b, r.data.meal_l, r.data.meal_d].filter(Boolean).join(' / ')],
-    ['🌙 睡眠', r.data.sleep + (r.data.wake ? ' · 夜醒 ' + r.data.wake : '')],
-    ['🚽 排尿/便', (r.data.urine||[]).join('、') + ' / ' + (r.data.stool||'')],
-    ['🤝 需協助', (r.data.adl||[]).join('、')],
-    ['📈 與昨日', r.data.compare],
-    ['📷 照片', (r.photo_count || 0) + ' 張'],
-    ['📝 備註', r.notes]
-  ].filter(([k,v]) => v && v !== ' / ' && v !== ' (0項)');
-
-  const content = fields.map(([k,v]) => `<div class="history-detail-row"><div class="label">${k}</div><div class="value">${v}</div></div>`).join('');
-
-  const photosHTML = r.photos && r.photos.length ?
-    '<div class="photo-preview" style="margin-top:12px;">' + r.photos.map(p => `<img src="${p}" alt="照片">`).join('') + '</div>' : '';
-
-  // 用 Wizard modal 結構顯示
-  const modal = document.getElementById('wizard-modal');
-  modal.querySelector('.modal-content').innerHTML = `
-    <button class="modal-close" onclick="closeModal('wizard-modal'); resetWizardModal();">×</button>
-    <h3>📋 ${r.date} 詳細記錄</h3>
-    <p style="font-size:13px;color:var(--text-soft);margin:0 0 12px;">⏰ ${new Date(r.saved_at).toLocaleString('zh-TW')} · 👤 ${r.user || '-'}</p>
-    ${content}
-    ${photosHTML}
-    <button class="btn btn-primary" onclick="closeModal('wizard-modal'); resetWizardModal();" style="margin-top:16px;width:100%;">關閉</button>
-  `;
-  modal.classList.add('active');
-}
-
-function resetWizardModal() {
-  // 還原為設定精靈內容(下次點才不會混淆)
-  setTimeout(() => {
-    document.getElementById('wizard-modal').querySelector('.modal-content').innerHTML = wizardModalHTML;
-  }, 300);
-}
-
-const wizardModalHTML = document.getElementById('wizard-modal').querySelector('.modal-content').innerHTML;
-
-// ===== 匯出 Excel(CSV) =====
-function exportExcel() {
-  const records = getAllRecords();
-  if (!records.length) { toast('尚無記錄可匯出', 'error'); return; }
-  records.sort((a,b) => a.saved_at.localeCompare(b.saved_at));
-
-  const headers = ['日期','星期','記錄者','患者','整體心情','主要情緒','行為觀察','黃昏症候群程度','黃昏症狀','譫妄警訊項目','譫妄警訊數','早餐','午餐','晚餐','睡眠品質','夜醒次數','排尿','排便','需協助項目','與昨日比較','照片數','備註','記錄時間'];
-
-  const rows = records.map(r => [
-    r.date, r.weekday || '', r.user || '', r.patient || '',
-    r.data.mood || '', (r.data.emotion || []).join('、'),
-    (r.data.behavior || []).join('、'), r.data.sundown_level || '',
-    (r.data.sundown_sym || []).join('、'), (r.data.delirium || []).join('、'),
-    (r.data.delirium || []).length,
-    r.data.meal_b || '', r.data.meal_l || '', r.data.meal_d || '',
-    r.data.sleep || '', r.data.wake || '',
-    (r.data.urine || []).join('、'), r.data.stool || '',
-    (r.data.adl || []).join('、'), r.data.compare || '',
-    r.photo_count || 0, (r.notes || '').replace(/\n/g, ' '),
-    new Date(r.saved_at).toLocaleString('zh-TW')
-  ]);
-
-  const csv = '﻿' + [headers, ...rows].map(row =>
-    row.map(cell => {
-      const s = String(cell);
-      return /[",\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s;
-    }).join(',')
-  ).join('\n');
-
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = '失智照護記錄_' + dateKey + '.csv';
-  a.click();
-  URL.revokeObjectURL(url);
-  toast('💗 已匯出 Excel(CSV)', 'success');
-}
-
-// ===== 匯出 JSON 備份 =====
-function exportJSON() {
-  const records = getAllRecords();
-  if (!records.length) { toast('尚無記錄可匯出', 'error'); return; }
-
-  const backup = {
-    version: '2.0',
-    exported_at: new Date().toISOString(),
-    config: state.config,
-    records: records
-  };
-
-  const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = '失智照護日誌_完整備份_' + dateKey + '.json';
-  a.click();
-  URL.revokeObjectURL(url);
-  toast('💾 已產生備份檔', 'success');
-}
-
-// ===== 匯入備份 =====
-function importJSON() {
-  document.getElementById('import-input').click();
-}
-
-function handleImport(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    try {
-      const backup = JSON.parse(e.target.result);
-      if (!backup.records || !Array.isArray(backup.records)) {
-        toast('備份檔格式錯誤', 'error');
+      if (!rows.length) {
+        summaryEl.innerHTML = `<div class="summary-row"><strong>狀態</strong><span>還沒有點選項目</span></div>`;
         return;
       }
-      if (!confirm('要還原 ' + backup.records.length + ' 筆記錄嗎?\n(現有資料不會被刪除,只會合併)')) return;
-      let added = 0;
-      backup.records.forEach(r => {
-        const key = 'log_' + r.date + '_' + new Date(r.saved_at).getTime();
-        if (!localStorage.getItem(key)) {
-          localStorage.setItem(key, JSON.stringify(r));
-          added++;
+
+      summaryEl.innerHTML = rows.map(row => `
+        <div class="summary-row">
+          <strong>${escapeHtml(row.label)}</strong>
+          <span>${escapeHtml(row.text)}</span>
+        </div>
+      `).join("");
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toast.classList.remove("show"), 1800);
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function currentRecord() {
+      const record = {
+        date: dateInput.value,
+        savedAt: new Date().toISOString()
+      };
+      fields.forEach(([field]) => {
+        record[field] = Array.isArray(state[field]) ? [...state[field]] : state[field];
+      });
+      return record;
+    }
+
+    function loadRecordToScreen(record) {
+      resetState();
+      fields.forEach(([field]) => {
+        if (record && field in record) {
+          state[field] = Array.isArray(record[field]) ? [...record[field]] : record[field];
         }
       });
-      if (backup.config) {
-        state.config = { ...state.config, ...backup.config };
-        localStorage.setItem('dementia_config', JSON.stringify(state.config));
+      syncButtons();
+      renderSummary();
+    }
+
+    function saveCurrentRecord(options = {}) {
+      const records = loadRecords();
+      const record = currentRecord();
+      const index = records.findIndex(item => item.date === record.date);
+      if (index >= 0) {
+        records[index] = record;
+      } else {
+        records.unshift(record);
       }
-      toast('💗 還原 ' + added + ' 筆新記錄', 'success');
-      loadSettingsToForm();
-      updateConfigUI();
-    } catch (err) {
-      toast('備份檔讀取失敗', 'error');
+      records.sort((a, b) => b.date.localeCompare(a.date));
+      saveRecords(records);
+      renderRecords();
+      if (!options.quiet) showToast("已儲存這一天");
     }
-  };
-  reader.readAsText(file);
-  event.target.value = '';
-}
 
-// ===== 雲端連線測試 =====
-async function testCloudConnection() {
-  if (!state.config.endpoint) {
-    toast('請先設定 Web App 網址', 'error');
-    return;
-  }
-  toast('測試中...');
-  try {
-    const res = await fetch(state.config.endpoint, { method: 'GET' });
-    const text = await res.text();
-    if (text.includes('正常運作中') || text.includes('OK')) {
-      toast('✓ 雲端連線正常', 'success');
-    } else {
-      toast('回應內容異常,請檢查部署設定', 'error');
+    function renderRecords() {
+      const records = loadRecords();
+      if (!records.length) {
+        recordList.innerHTML = `<div class="record-item"><div><b>還沒有紀錄</b><span>點選後按「儲存今天」就會出現在這裡。</span></div></div>`;
+        return;
+      }
+      recordList.innerHTML = records.slice(0, 14).map(record => {
+        const flags = [
+          record.overall,
+          record.moodSeverity,
+          record.behaviorSeverity,
+          record.sundowning ? `黃昏:${record.sundowning}` : "",
+          record.delirium && record.delirium.length ? "有譫妄警訊" : ""
+        ].filter(Boolean).join(" / ");
+        return `
+          <div class="record-item">
+            <div>
+              <b>${escapeHtml(record.date)}</b>
+              <span>${escapeHtml(flags || "已記錄")}</span>
+            </div>
+            <button type="button" data-delete="${escapeHtml(record.date)}" aria-label="刪除 ${escapeHtml(record.date)}">刪</button>
+          </div>
+        `;
+      }).join("");
     }
-  } catch (e) {
-    toast('連線失敗:' + e.message, 'error');
-  }
-}
 
-// ===== 清除所有資料 =====
-function confirmClearAll() {
-  if (!confirm('⚠ 確定要清除所有記錄嗎?\n\n(設定不會被清除,可考慮先「備份檔案」再清除)')) return;
-  if (!confirm('再次確認:這個動作無法復原!')) return;
-  const keys = [];
-  for (let i = 0; i < localStorage.length; i++) {
-    const k = localStorage.key(i);
-    if (k.startsWith('log_') || k.startsWith('dementia_draft_')) keys.push(k);
-  }
-  keys.forEach(k => localStorage.removeItem(k));
-  toast('已清除所有記錄', 'success');
-}
-
-// ===== 複製 Apps Script 程式碼 =====
-const APPS_SCRIPT_CODE = `// ============================================
-// 暖心照護日誌 v2.0 後端
-// ============================================
-const CONFIG = {
-  REPORT_EMAIL: '',  // 留空會自動使用您的 Google 帳號 Email
-  REPORT_FREQUENCY: 'WEEKLY',
-  PHOTO_FOLDER_NAME: '失智症照護日誌_照片',
-  SHEET_NAME: '每日記錄'
-};
-
-function setupAndDeploy() {
-  getOrCreateSheet();
-  setupTrigger();
-  Logger.log('✓ 設定完成!請接著到「部署 → 新增部署作業 → 類型選網頁應用程式 → 存取權給任何人 → 部署」取得網址');
-  SpreadsheetApp.getActiveSpreadsheet().toast('✓ 後端設定完成!請接著部署為網頁應用程式', '完成', 10);
-}
-
-function doPost(e) {
-  try {
-    const record = JSON.parse(e.postData.contents);
-    const sheet = getOrCreateSheet();
-    const photoLinks = [];
-    if (record.photos && record.photos.length > 0) {
-      const folder = getOrCreateFolder(CONFIG.PHOTO_FOLDER_NAME);
-      record.photos.forEach((dataUrl, i) => {
-        try {
-          const matches = dataUrl.match(/^data:image\\/(\\w+);base64,(.+)$/);
-          if (matches) {
-            const blob = Utilities.newBlob(
-              Utilities.base64Decode(matches[2]),
-              'image/' + matches[1],
-              record.date + '_' + record.user + '_' + Date.now() + '_' + i + '.jpg'
-            );
-            const file = folder.createFile(blob);
-            file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-            photoLinks.push(file.getUrl());
-          }
-        } catch (err) { Logger.log('照片儲存失敗: ' + err); }
+    function recordToSummary(record) {
+      const lines = [`日期：${record.date}`];
+      fields.forEach(([field, label]) => {
+        const value = record[field];
+        const text = Array.isArray(value) ? value.join("、") : value;
+        if (text) lines.push(`${label}：${text}`);
       });
+      return lines.join("\n");
     }
-    sheet.appendRow([
-      new Date(), record.date || '', record.weekday || '', record.user || '',
-      record.patient || '', record.data.mood || '',
-      (record.data.emotion || []).join('、'), (record.data.behavior || []).join('、'),
-      record.data.sundown_level || '', (record.data.sundown_sym || []).join('、'),
-      (record.data.delirium || []).join('、'), (record.data.delirium || []).length,
-      record.data.meal_b || '', record.data.meal_l || '', record.data.meal_d || '',
-      record.data.sleep || '', record.data.wake || '',
-      (record.data.urine || []).join('、'), record.data.stool || '',
-      (record.data.adl || []).join('、'), record.data.compare || '',
-      photoLinks.length, photoLinks.join('\\n'), record.notes || ''
-    ]);
-    return ContentService.createTextOutput(JSON.stringify({ ok: true })).setMimeType(ContentService.MimeType.JSON);
-  } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({ ok: false, error: err.toString() })).setMimeType(ContentService.MimeType.JSON);
-  }
-}
 
-function getOrCreateSheet() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  let sheet = ss.getSheetByName(CONFIG.SHEET_NAME);
-  if (!sheet) {
-    sheet = ss.insertSheet(CONFIG.SHEET_NAME);
-    const headers = ['上傳時間','記錄日期','星期','記錄者','患者','整體心情','主要情緒','行為觀察','黃昏症候群程度','黃昏症狀','譫妄警訊項目','譫妄警訊數','早餐','午餐','晚餐','睡眠品質','夜醒次數','排尿','排便','需協助項目','與昨日比較','照片數','照片連結','備註'];
-    sheet.appendRow(headers);
-    const headerRange = sheet.getRange(1, 1, 1, headers.length);
-    headerRange.setBackground('#FF8FAB').setFontColor('#FFFFFF').setFontWeight('bold').setHorizontalAlignment('center');
-    sheet.setFrozenRows(1);
-    sheet.autoResizeColumns(1, headers.length);
-  }
-  return sheet;
-}
-
-function getOrCreateFolder(name) {
-  const folders = DriveApp.getFoldersByName(name);
-  if (folders.hasNext()) return folders.next();
-  return DriveApp.createFolder(name);
-}
-
-function generateAndSendReport() {
-  try {
-    const sheet = getOrCreateSheet();
-    const data = sheet.getDataRange().getValues();
-    if (data.length <= 1) return;
-    const headers = data[0];
-    const records = data.slice(1);
-    const now = new Date();
-    let startDate, periodLabel;
-    if (CONFIG.REPORT_FREQUENCY === 'MONTHLY') {
-      startDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-      periodLabel = Utilities.formatDate(startDate, 'Asia/Taipei', 'yyyy/MM') + ' 月份';
-    } else {
-      startDate = new Date(now); startDate.setDate(now.getDate() - 7);
-      periodLabel = Utilities.formatDate(startDate, 'Asia/Taipei', 'MM/dd') + '-' + Utilities.formatDate(now, 'Asia/Taipei', 'MM/dd');
+    function csvEscape(value) {
+      const text = Array.isArray(value) ? value.join("、") : (value || "");
+      return `"${String(text).replaceAll('"', '""')}"`;
     }
-    const filtered = records.filter(row => new Date(row[1]) >= startDate);
-    if (filtered.length === 0) return;
-    const reportName = '失智照護週報_' + periodLabel + '_' + Utilities.formatDate(now, 'Asia/Taipei', 'yyyyMMdd');
-    const reportSS = SpreadsheetApp.create(reportName);
-    const reportSheet = reportSS.getActiveSheet();
-    reportSheet.setName('期間記錄');
-    reportSheet.appendRow(headers);
-    reportSheet.getRange(2, 1, filtered.length, headers.length).setValues(filtered);
-    const headerRange = reportSheet.getRange(1, 1, 1, headers.length);
-    headerRange.setBackground('#FF8FAB').setFontColor('#FFFFFF').setFontWeight('bold');
-    reportSheet.setFrozenRows(1);
-    reportSheet.autoResizeColumns(1, headers.length);
-    const summarySheet = reportSS.insertSheet('摘要統計', 0);
-    addSummary(summarySheet, filtered, headers, periodLabel);
-    const reportFile = DriveApp.getFileById(reportSS.getId());
-    const excelBlob = reportFile.getAs('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet').setName(reportName + '.xlsx');
-    const recipient = CONFIG.REPORT_EMAIL || Session.getActiveUser().getEmail();
-    MailApp.sendEmail({
-      to: recipient,
-      subject: '💗 失智照護報表(' + periodLabel + ')',
-      body: '您好,\\n\\n附件為失智症照護記錄報表(' + periodLabel + '),共 ' + filtered.length + ' 筆記錄。\\n可帶去回診給醫師參考。\\n\\n謝謝您的辛勞 💕\\n— 暖心照護日誌',
-      attachments: [excelBlob]
-    });
-    const reportFolder = getOrCreateFolder('失智照護日誌_週報');
-    reportFolder.addFile(reportFile);
-    DriveApp.getRootFolder().removeFile(reportFile);
-  } catch (err) { Logger.log('報表錯誤: ' + err); }
-}
 
-function addSummary(sheet, records, headers, periodLabel) {
-  sheet.getRange('A1').setValue('失智照護摘要報告 💗').setFontSize(16).setFontWeight('bold');
-  sheet.getRange('A2').setValue('期間:' + periodLabel);
-  sheet.getRange('A3').setValue('記錄筆數:' + records.length);
-  const moodCount = {}, sundownCount = { '無':0,'輕微':0,'明顯':0,'嚴重':0 };
-  let deliriumWarningDays = 0; const userCount = {};
-  records.forEach(row => {
-    const m = row[5]; if (m) moodCount[m] = (moodCount[m] || 0) + 1;
-    const s = row[8]; if (s && sundownCount.hasOwnProperty(s)) sundownCount[s]++;
-    if ((row[11] || 0) >= 2) deliriumWarningDays++;
-    const u = row[3]; if (u) userCount[u] = (userCount[u] || 0) + 1;
-  });
-  let row = 5;
-  sheet.getRange(row, 1).setValue('心情分布').setFontWeight('bold'); row++;
-  Object.entries(moodCount).forEach(([k, v]) => { sheet.getRange(row, 1).setValue(k); sheet.getRange(row, 2).setValue(v + ' 天'); row++; });
-  row++; sheet.getRange(row, 1).setValue('黃昏症候群統計').setFontWeight('bold'); row++;
-  Object.entries(sundownCount).forEach(([k, v]) => { sheet.getRange(row, 1).setValue(k); sheet.getRange(row, 2).setValue(v + ' 天'); row++; });
-  row++; sheet.getRange(row, 1).setValue('譫妄警訊').setFontWeight('bold'); row++;
-  sheet.getRange(row, 1).setValue('警訊達 2 項以上的天數');
-  sheet.getRange(row, 2).setValue(deliriumWarningDays + ' 天');
-  if (deliriumWarningDays > 0) sheet.getRange(row, 3).setValue('⚠ 建議與醫師討論').setFontColor('#DC2626').setFontWeight('bold');
-  row += 2; sheet.getRange(row, 1).setValue('記錄者貢獻').setFontWeight('bold'); row++;
-  Object.entries(userCount).forEach(([k, v]) => { sheet.getRange(row, 1).setValue(k); sheet.getRange(row, 2).setValue(v + ' 筆'); row++; });
-  sheet.autoResizeColumns(1, 3);
-}
-
-function setupTrigger() {
-  ScriptApp.getProjectTriggers().forEach(t => {
-    if (t.getHandlerFunction() === 'generateAndSendReport') ScriptApp.deleteTrigger(t);
-  });
-  if (CONFIG.REPORT_FREQUENCY === 'MONTHLY') {
-    ScriptApp.newTrigger('generateAndSendReport').timeBased().onMonthDay(1).atHour(20).create();
-  } else {
-    ScriptApp.newTrigger('generateAndSendReport').timeBased().everyWeeks(1).onWeekDay(ScriptApp.WeekDay.SUNDAY).atHour(20).create();
-  }
-}
-
-function doGet() {
-  return ContentService.createTextOutput('暖心照護日誌 API 正常運作中 💗');
-}`;
-
-function copyAppsScript() {
-  navigator.clipboard.writeText(APPS_SCRIPT_CODE).then(() => {
-    toast('💗 程式碼已複製,貼到 Apps Script 即可', 'success');
-  }, () => {
-    // fallback
-    const ta = document.createElement('textarea');
-    ta.value = APPS_SCRIPT_CODE;
-    document.body.appendChild(ta);
-    ta.select();
-    try { document.execCommand('copy'); toast('💗 程式碼已複製', 'success'); }
-    catch(e) { toast('複製失敗,請手動複製', 'error'); }
-    document.body.removeChild(ta);
-  });
-}
-
-// ===== Onboarding =====
-let onboardingStep = 0;
-const onboardingScreens = [
-  { title: '嗨,我是小暖!', text: '每天記錄家人的狀況,陪您一起守護最重要的人 💕', btn: '繼續 →' },
-  { title: '簡單記錄,專業分析', text: '心情、譫妄警訊、飲食睡眠 全都點選即可,還能拍照、語音輸入 📝', btn: '太棒了 →' },
-  { title: '雲端同步,自動報表', text: '設定一次,資料自動上傳 Google,每週自動寄專業報表給您 ☁\n(也可以只用本機,完全免設定)', btn: '開始使用 💗' }
-];
-
-function showOnboarding() {
-  document.getElementById('onboarding').classList.add('show');
-  onboardingStep = 0;
-  updateOnboarding();
-}
-
-function updateOnboarding() {
-  const s = onboardingScreens[onboardingStep];
-  document.getElementById('ob-title').textContent = s.title;
-  document.getElementById('ob-text').innerHTML = s.text;
-  document.getElementById('ob-btn').textContent = s.btn;
-  document.querySelectorAll('.onboarding .step-indicator span').forEach((dot, i) => {
-    dot.classList.toggle('active', i === onboardingStep);
-  });
-}
-
-function onboardingNext() {
-  if (onboardingStep < onboardingScreens.length - 1) {
-    onboardingStep++;
-    updateOnboarding();
-  } else {
-    document.getElementById('onboarding').classList.remove('show');
-    state.config.onboarded = true;
-    localStorage.setItem('dementia_config', JSON.stringify(state.config));
-    if (!state.config.users.length) {
-      switchTab('settings');
-      setTimeout(() => toast('請先填上基本資料 💕'), 500);
+    function exportCsv() {
+      const records = loadRecords();
+      if (!records.length) {
+        showToast("目前沒有紀錄可匯出");
+        return;
+      }
+      const header = ["日期", ...fields.map(([, label]) => label), "儲存時間"];
+      const rows = records.map(record => [
+        record.date,
+        ...fields.map(([field]) => record[field]),
+        record.savedAt
+      ]);
+      const csv = "\ufeff" + [
+        header.map(csvEscape).join(","),
+        ...rows.map(row => row.map(csvEscape).join(","))
+      ].join("\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `每日照護紀錄-${todayValue()}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      showToast("CSV 已匯出");
     }
-  }
-}
 
-// ===== 啟動 =====
-function init() {
-  // 載入設定
-  try {
-    const cfg = JSON.parse(localStorage.getItem('dementia_config') || '{}');
-    state.config = { patient: '', users: [], endpoint: '', email: '', emergency: '', onboarded: false, ...cfg };
-  } catch(e) {}
-
-  // 載入上次的使用者
-  const lastUser = localStorage.getItem('dementia_current_user');
-  if (lastUser && state.config.users.includes(lastUser)) setUser(lastUser);
-
-  updateConfigUI();
-
-  // 載入今天已存的記錄(取最新一筆)
-  const todayRecords = [];
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    if (key.startsWith('log_' + dateKey)) {
-      try { todayRecords.push({ key, data: JSON.parse(localStorage.getItem(key)) }); } catch(e) {}
+    function cloudRowToRecord(row) {
+      const payload = row.payload || {};
+      return {
+        ...payload,
+        date: payload.date || row.record_date,
+        savedAt: payload.savedAt || row.saved_at || row.updated_at || new Date().toISOString()
+      };
     }
-  }
 
-  // 載入草稿(優先於已存記錄)
-  const draftRaw = localStorage.getItem('dementia_draft_' + dateKey);
-  let loadFrom = null;
-  if (draftRaw) {
-    try { loadFrom = JSON.parse(draftRaw); } catch(e) {}
-  } else if (todayRecords.length) {
-    todayRecords.sort((a,b) => b.data.saved_at.localeCompare(a.data.saved_at));
-    loadFrom = todayRecords[0].data;
-  }
+    function mergeRecords(localRecords, cloudRecords) {
+      const byDate = new Map();
+      [...localRecords, ...cloudRecords].forEach(record => {
+        if (!record || !record.date) return;
+        const existing = byDate.get(record.date);
+        const existingTime = existing ? Date.parse(existing.savedAt || "") || 0 : 0;
+        const nextTime = Date.parse(record.savedAt || "") || 0;
+        if (!existing || nextTime >= existingTime) {
+          byDate.set(record.date, record);
+        }
+      });
+      return [...byDate.values()].sort((a, b) => b.date.localeCompare(a.date));
+    }
 
-  if (loadFrom) {
-    Object.keys(loadFrom.data || {}).forEach(group => {
-      const val = loadFrom.data[group];
-      const grid = document.querySelector('[data-group="' + group + '"]');
-      if (!grid) return;
-      if (Array.isArray(val)) {
-        val.forEach(v => {
-          const btn = grid.querySelector('[data-val="' + v + '"]');
-          if (btn) { btn.classList.add('selected'); state.data[group].push(v); }
+    async function signUpCloud() {
+      try {
+        if (!saveCloudConfig()) return;
+        const password = cloudPasswordInput.value;
+        if (!cloudEmailInput.value || !password) {
+          setCloudStatus("請填入 Email 和密碼。", "warn");
+          return;
+        }
+        const client = await getSupabaseClient();
+        const { error } = await client.auth.signUp({
+          email: cloudEmailInput.value.trim(),
+          password
         });
-      } else if (val) {
-        const btn = grid.querySelector('[data-val="' + val + '"]');
-        if (btn) { btn.classList.add('selected'); state.data[group] = val; }
+        if (error) throw error;
+        setCloudStatus("帳號已建立。若 Supabase 要求驗證 Email，請先到信箱完成驗證後再登入。");
+        showToast("帳號已建立");
+      } catch (error) {
+        setCloudStatus(error.message || "建立帳號失敗。", "warn");
+      }
+    }
+
+    async function signInCloud() {
+      try {
+        if (!saveCloudConfig()) return;
+        const password = cloudPasswordInput.value;
+        if (!cloudEmailInput.value || !password) {
+          setCloudStatus("請填入 Email 和密碼。", "warn");
+          return;
+        }
+        const client = await getSupabaseClient();
+        const { data, error } = await client.auth.signInWithPassword({
+          email: cloudEmailInput.value.trim(),
+          password
+        });
+        if (error) throw error;
+        setCloudStatus(`已登入雲端：${data.user.email}`);
+        cloudPasswordInput.value = "";
+        showToast("已登入雲端");
+      } catch (error) {
+        setCloudStatus(error.message || "登入失敗。", "warn");
+      }
+    }
+
+    async function signOutCloud() {
+      try {
+        const client = await getSupabaseClient();
+        await client.auth.signOut();
+        setCloudStatus("已登出雲端。");
+        showToast("已登出");
+      } catch (error) {
+        setCloudStatus(error.message || "登出失敗。", "warn");
+      }
+    }
+
+    async function uploadCloud() {
+      try {
+        saveCurrentRecord({ quiet: true });
+        const { client, user } = await getCloudUser();
+        const records = loadRecords();
+        if (!records.length) {
+          setCloudStatus("目前沒有紀錄可上傳。", "warn");
+          return;
+        }
+        const rows = records.map(record => ({
+          user_id: user.id,
+          record_date: record.date,
+          payload: record,
+          saved_at: record.savedAt || new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        }));
+        const { error } = await client
+          .from("care_records")
+          .upsert(rows, { onConflict: "user_id,record_date" });
+        if (error) throw error;
+        setCloudStatus(`已上傳 ${records.length} 筆紀錄到雲端。`);
+        showToast("已上傳雲端");
+      } catch (error) {
+        setCloudStatus(error.message || "上傳失敗，請確認 SQL 已建立資料表。", "warn");
+      }
+    }
+
+    async function downloadCloud() {
+      try {
+        const { client, user } = await getCloudUser();
+        const { data, error } = await client
+          .from("care_records")
+          .select("record_date,payload,saved_at,updated_at")
+          .eq("user_id", user.id)
+          .order("record_date", { ascending: false });
+        if (error) throw error;
+        const cloudRecords = (data || []).map(cloudRowToRecord);
+        const records = mergeRecords(loadRecords(), cloudRecords);
+        saveRecords(records);
+        const current = records.find(item => item.date === dateInput.value);
+        loadRecordToScreen(current);
+        renderRecords();
+        setCloudStatus(`已從雲端下載 ${cloudRecords.length} 筆，並和本機合併。`);
+        showToast("已下載雲端紀錄");
+      } catch (error) {
+        setCloudStatus(error.message || "下載失敗，請確認已登入。", "warn");
+      }
+    }
+
+    function applyQuickCalm() {
+      resetState();
+      state.overall = "差不多";
+      state.sleepIssues = ["睡得安穩"];
+      state.foodWater = ["食慾普通"];
+      state.toilet = ["正常"];
+      state.bodySignals = ["沒有不適"];
+      state.mood = ["平穩"];
+      state.moodSeverity = "0 無";
+      state.mind = ["清楚"];
+      state.behaviorSeverity = "0 無";
+      state.sundowning = "沒有";
+      syncButtons();
+      renderSummary();
+      showToast("已套用平穩狀態");
+    }
+
+    function clearToday() {
+      resetState();
+      syncButtons();
+      renderSummary();
+      showToast("今天畫面已清空");
+    }
+
+    document.addEventListener("click", event => {
+      const chip = event.target.closest(".chip");
+      if (chip) {
+        const group = chip.closest("[data-field]");
+        const field = group.dataset.field;
+        const value = chip.dataset.value;
+        if (group.dataset.type === "multi") {
+          const list = Array.isArray(state[field]) ? state[field] : [];
+          state[field] = list.includes(value)
+            ? list.filter(item => item !== value)
+            : [...list, value];
+        } else {
+          state[field] = state[field] === value ? "" : value;
+        }
+        syncButtons();
+        renderSummary();
+        return;
+      }
+
+      const deleteButton = event.target.closest("[data-delete]");
+      if (deleteButton) {
+        const date = deleteButton.dataset.delete;
+        if (!confirm(`確定刪除 ${date} 的本機紀錄嗎？`)) return;
+        const records = loadRecords().filter(record => record.date !== date);
+        saveRecords(records);
+        if (date === dateInput.value) loadRecordToScreen(null);
+        renderRecords();
+        showToast("已刪除紀錄");
       }
     });
-    if (loadFrom.notes) document.getElementById('notes').value = loadFrom.notes;
-    if (loadFrom.photos) { state.photos = loadFrom.photos; renderPhotos(); }
-    updateDeliriumWarn();
-  }
 
-  // 第一次使用顯示 Onboarding
-  if (!state.config.onboarded) {
-    setTimeout(showOnboarding, 300);
-  }
+    document.querySelectorAll("[data-date-offset]").forEach(button => {
+      button.addEventListener("click", () => {
+        dateInput.value = todayValue(Number(button.dataset.dateOffset));
+        const record = loadRecords().find(item => item.date === dateInput.value);
+        loadRecordToScreen(record);
+      });
+    });
 
-  // 備註區自動儲存草稿
-  document.getElementById('notes').addEventListener('input', autosaveDraft);
-}
+    dateInput.addEventListener("change", () => {
+      const record = loadRecords().find(item => item.date === dateInput.value);
+      loadRecordToScreen(record);
+    });
 
-init();
-</script>
+    document.querySelector("#quickCalm").addEventListener("click", applyQuickCalm);
+    document.querySelector("#saveRecord").addEventListener("click", saveCurrentRecord);
+    document.querySelector("#exportCsv").addEventListener("click", exportCsv);
+    document.querySelector("#clearToday").addEventListener("click", clearToday);
+    document.querySelector("#saveCloudConfig").addEventListener("click", saveCloudConfig);
+    document.querySelector("#signUpCloud").addEventListener("click", signUpCloud);
+    document.querySelector("#signInCloud").addEventListener("click", signInCloud);
+    document.querySelector("#signOutCloud").addEventListener("click", signOutCloud);
+    document.querySelector("#uploadCloud").addEventListener("click", uploadCloud);
+    document.querySelector("#downloadCloud").addEventListener("click", downloadCloud);
+    document.querySelector("#scrollSummary").addEventListener("click", () => {
+      document.querySelector("#summaryTitle").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    document.querySelector("#copySummary").addEventListener("click", async () => {
+      const text = recordToSummary(currentRecord());
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast("摘要已複製");
+      } catch {
+        showToast("此瀏覽器無法複製，請改用匯出 CSV");
+      }
+    });
+
+    resetState();
+    dateInput.value = todayValue();
+    applyCloudConfig();
+    const existing = loadRecords().find(item => item.date === dateInput.value);
+    loadRecordToScreen(existing);
+    renderRecords();
+    if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+      navigator.serviceWorker.register("sw.js").catch(() => {});
+    }
+  </script>
 </body>
 </html>
