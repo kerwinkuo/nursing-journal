@@ -1,12 +1,12 @@
 {
-  "name": "每日照護點選紀錄",
-  "short_name": "照護紀錄",
-  "description": "用手機點選記錄失智症患者每天的心情、行為、黃昏症候群與譫妄警訊。",
+  "name": "果果照護日誌",
+  "short_name": "果果照護",
+  "description": "用水果匿名代號記錄多位失智症長輩的每日狀況，並可同步到 Google 試算表。",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f7f2ea",
-  "theme_color": "#2d6b58",
+  "background_color": "#fff4df",
+  "theme_color": "#4f8f6b",
   "orientation": "portrait",
   "icons": [
     {

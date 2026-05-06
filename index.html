@@ -2,30 +2,31 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f7f2ea">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#fff4df">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="照護紀錄">
-  <title>每日照護點選紀錄</title>
+  <meta name="apple-mobile-web-app-title" content="果果照護">
+  <title>果果照護日誌</title>
   <style>
     :root {
       color-scheme: light;
-      --paper: #f7f2ea;
-      --ink: #2f342f;
-      --muted: #6f756e;
-      --line: #d9d0c2;
-      --panel: #fffaf1;
-      --soft: #ede3d3;
-      --mint: #b9d9ca;
-      --mint-strong: #2d6b58;
-      --rose: #e9b4aa;
-      --rose-strong: #9e3d35;
-      --gold: #dfbd63;
-      --blue: #8bb7cf;
-      --shadow: 0 14px 40px rgba(49, 42, 31, 0.12);
+      --cream: #fff4df;
+      --paper: #fffaf0;
+      --ink: #3c362d;
+      --soft-ink: #7a6f61;
+      --line: #ead9bd;
+      --leaf: #4f8f6b;
+      --leaf-soft: #dff0df;
+      --peach: #ffcab0;
+      --peach-strong: #d96f55;
+      --berry: #f4a9bf;
+      --banana: #ffe28a;
+      --mint: #bfe7d2;
+      --sky: #baddec;
+      --shadow: 0 12px 34px rgba(97, 73, 36, 0.13);
       --radius: 8px;
       font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-serif;
     }
@@ -38,15 +39,16 @@
       margin: 0;
       min-height: 100vh;
       background:
-        linear-gradient(135deg, rgba(185, 217, 202, 0.38), transparent 28rem),
-        linear-gradient(315deg, rgba(223, 189, 99, 0.2), transparent 34rem),
-        var(--paper);
+        linear-gradient(135deg, rgba(255, 226, 138, 0.42), transparent 24rem),
+        linear-gradient(315deg, rgba(191, 231, 210, 0.46), transparent 30rem),
+        var(--cream);
       color: var(--ink);
       letter-spacing: 0;
     }
 
     button,
-    input {
+    input,
+    textarea {
       font: inherit;
     }
 
@@ -58,192 +60,209 @@
     }
 
     .app {
-      width: min(100%, 760px);
+      width: min(100%, 780px);
       margin: 0 auto;
-      padding: 18px 14px 92px;
+      padding: 14px 12px 104px;
     }
 
     .topbar {
       position: sticky;
       top: 0;
       z-index: 20;
-      margin: -18px -14px 16px;
-      padding: 12px 14px;
-      background: color-mix(in oklch, var(--paper) 88%, transparent);
+      margin: -14px -12px 12px;
+      padding: 10px 12px;
+      background: rgba(255, 244, 223, 0.9);
       backdrop-filter: blur(18px);
-      border-bottom: 1px solid rgba(126, 111, 88, 0.16);
+      border-bottom: 1px solid rgba(122, 111, 97, 0.16);
     }
 
     .topbar-inner {
-      width: min(100%, 760px);
+      width: min(100%, 780px);
       margin: 0 auto;
       display: grid;
       grid-template-columns: 1fr auto;
-      gap: 12px;
+      gap: 10px;
       align-items: center;
     }
 
     h1,
     h2,
-    h3,
     p {
       margin: 0;
     }
 
     h1 {
       font-size: 1.28rem;
-      line-height: 1.25;
-      font-weight: 800;
+      line-height: 1.2;
+      font-weight: 900;
     }
 
     .subtitle {
       margin-top: 2px;
-      color: var(--muted);
-      font-size: 0.88rem;
+      color: var(--soft-ink);
+      font-size: 0.86rem;
     }
 
-    .date-pill {
-      min-height: 42px;
-      display: inline-flex;
+    .date-box {
+      display: inline-grid;
+      grid-template-columns: auto 1fr;
+      gap: 6px;
       align-items: center;
-      gap: 8px;
-      padding: 0 12px;
+      min-height: 42px;
+      padding: 0 10px;
       border-radius: var(--radius);
-      background: var(--panel);
-      color: var(--ink);
       border: 1px solid var(--line);
-      box-shadow: 0 6px 16px rgba(57, 45, 30, 0.07);
-      white-space: nowrap;
+      background: var(--paper);
+      box-shadow: 0 6px 18px rgba(97, 73, 36, 0.08);
     }
 
-    .date-pill input {
-      width: 116px;
+    .date-box input {
+      width: 120px;
       border: 0;
-      background: transparent;
-      color: inherit;
       outline: 0;
+      background: transparent;
+      color: var(--ink);
     }
 
     .hero {
       display: grid;
       gap: 12px;
-      margin: 14px 0 16px;
       padding: 14px;
       border-radius: var(--radius);
       background:
-        linear-gradient(120deg, rgba(255, 250, 241, 0.94), rgba(255, 250, 241, 0.72)),
-        radial-gradient(circle at 82% 18%, rgba(139, 183, 207, 0.44), transparent 34%);
-      border: 1px solid rgba(126, 111, 88, 0.18);
+        linear-gradient(120deg, rgba(255, 250, 240, 0.96), rgba(255, 250, 240, 0.72)),
+        radial-gradient(circle at 92% 10%, rgba(244, 169, 191, 0.42), transparent 34%);
+      border: 1px solid rgba(122, 111, 97, 0.16);
       box-shadow: var(--shadow);
     }
 
-    .hero-grid {
+    .hero-row {
       display: grid;
-      grid-template-columns: 74px 1fr;
-      gap: 14px;
+      grid-template-columns: 72px 1fr;
+      gap: 12px;
       align-items: center;
     }
 
-    .mark {
-      width: 74px;
+    .fruit-badge {
+      width: 72px;
       aspect-ratio: 1;
-      border-radius: 50%;
-      background: conic-gradient(from 210deg, var(--mint), var(--gold), var(--rose), var(--blue), var(--mint));
       display: grid;
       place-items: center;
-      box-shadow: inset 0 0 0 8px rgba(255, 250, 241, 0.82);
-    }
-
-    .mark svg {
-      width: 36px;
-      height: 36px;
-      stroke: #354338;
-      stroke-width: 2;
-      fill: none;
-      stroke-linecap: round;
-      stroke-linejoin: round;
+      border-radius: 50%;
+      background: var(--active-color, var(--banana));
+      box-shadow: inset 0 0 0 8px rgba(255, 250, 240, 0.72);
+      font-size: 2.15rem;
     }
 
     .hero h2 {
       font-size: 1.08rem;
       line-height: 1.35;
-      font-weight: 800;
+      font-weight: 900;
     }
 
     .hero p {
-      margin-top: 5px;
-      color: var(--muted);
-      font-size: 0.92rem;
-      line-height: 1.55;
+      margin-top: 4px;
+      color: var(--soft-ink);
+      font-size: 0.9rem;
+      line-height: 1.5;
     }
 
-    .quick-actions {
+    .fruit-strip {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 92px;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 2px 0 4px;
+      scrollbar-width: thin;
+    }
+
+    .fruit-card {
+      min-height: 70px;
+      display: grid;
+      place-items: center;
+      gap: 2px;
+      padding: 8px 6px;
+      border-radius: var(--radius);
+      background: #fffdf6;
+      border: 1px solid var(--line);
+      color: var(--ink);
+      font-weight: 900;
+      line-height: 1.1;
+    }
+
+    .fruit-card[aria-pressed="true"] {
+      border-color: var(--leaf);
+      background: color-mix(in oklch, var(--fruit-color) 34%, white);
+      box-shadow: 0 0 0 2px rgba(79, 143, 107, 0.16);
+    }
+
+    .fruit-card .emoji {
+      font-size: 1.45rem;
+    }
+
+    .fruit-card small {
+      color: var(--soft-ink);
+      font-size: 0.72rem;
+      font-weight: 800;
+    }
+
+    .quick-row {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 8px;
     }
 
-    .small-action {
-      min-height: 42px;
+    .quick-btn,
+    .small-btn {
+      min-height: 44px;
       border-radius: var(--radius);
-      background: rgba(255, 255, 255, 0.48);
       border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.62);
       color: var(--ink);
-      font-weight: 700;
+      font-weight: 900;
     }
 
     .section {
-      margin-top: 14px;
+      margin-top: 12px;
       padding: 14px;
       border-radius: var(--radius);
-      background: rgba(255, 250, 241, 0.8);
-      border: 1px solid rgba(126, 111, 88, 0.18);
+      background: rgba(255, 250, 240, 0.84);
+      border: 1px solid rgba(122, 111, 97, 0.15);
     }
 
     .section-head {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 12px;
+      gap: 10px;
+      margin-bottom: 10px;
     }
 
     .section h2 {
       font-size: 1rem;
-      line-height: 1.35;
-      font-weight: 800;
+      line-height: 1.3;
+      font-weight: 900;
     }
 
     .hint {
       margin-top: 3px;
-      color: var(--muted);
-      font-size: 0.84rem;
+      color: var(--soft-ink);
+      font-size: 0.82rem;
       line-height: 1.45;
     }
 
-    .status-dot {
-      flex: 0 0 auto;
+    .done-dot {
       width: 12px;
       height: 12px;
+      flex: 0 0 auto;
       margin-top: 5px;
       border-radius: 50%;
       background: var(--line);
     }
 
-    .section[data-touched="true"] .status-dot {
-      background: var(--mint-strong);
-    }
-
-    .group {
-      display: grid;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .label {
-      color: var(--muted);
-      font-size: 0.82rem;
-      font-weight: 700;
+    .section[data-touched="true"] .done-dot {
+      background: var(--leaf);
     }
 
     .chips {
@@ -256,87 +275,118 @@
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
-    .chips.four {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
     .chip {
-      min-height: 48px;
-      padding: 10px 8px;
+      min-height: 50px;
+      padding: 9px 8px;
       border-radius: var(--radius);
-      background: #fffdf7;
       border: 1px solid var(--line);
+      background: #fffdf6;
       color: var(--ink);
-      font-weight: 800;
+      font-weight: 900;
       line-height: 1.18;
-      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.75) inset;
-      transition: transform 140ms ease, border-color 140ms ease, background 140ms ease, box-shadow 140ms ease;
+      transition: transform 130ms ease, background 130ms ease, border-color 130ms ease;
     }
 
-    .chip:active {
+    .chip:active,
+    .quick-btn:active,
+    .small-btn:active,
+    .fruit-card:active {
       transform: scale(0.98);
     }
 
     .chip[aria-pressed="true"] {
-      background: color-mix(in oklch, var(--mint) 62%, white);
-      border-color: var(--mint-strong);
-      box-shadow: 0 0 0 2px rgba(45, 107, 88, 0.12);
+      border-color: var(--leaf);
+      background: var(--leaf-soft);
     }
 
-    .chip.warning[aria-pressed="true"] {
-      background: color-mix(in oklch, var(--rose) 66%, white);
-      border-color: var(--rose-strong);
-      color: #642722;
-      box-shadow: 0 0 0 2px rgba(158, 61, 53, 0.12);
+    .chip.warn[aria-pressed="true"] {
+      border-color: var(--peach-strong);
+      background: #ffe7df;
+      color: #7f372b;
     }
 
-    .chip small {
-      display: block;
-      margin-top: 2px;
-      color: var(--muted);
-      font-size: 0.72rem;
-      font-weight: 700;
-    }
-
-    .severity {
+    .group {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 8px;
-    }
-
-    .severity .chip {
-      min-height: 44px;
-    }
-
-    .alert {
-      display: none;
       margin-top: 12px;
-      padding: 12px;
-      border-radius: var(--radius);
-      background: #fff1ed;
-      border: 1px solid var(--rose);
-      color: #642722;
-      line-height: 1.5;
-      font-weight: 700;
     }
 
-    .alert.show {
-      display: block;
+    .label {
+      color: var(--soft-ink);
+      font-size: 0.82rem;
+      font-weight: 900;
+    }
+
+    textarea,
+    .sync-input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fffdf6;
+      color: var(--ink);
+      outline: 0;
+    }
+
+    textarea {
+      min-height: 72px;
+      resize: vertical;
+      padding: 10px 12px;
+      line-height: 1.5;
+    }
+
+    .sync-input {
+      min-height: 48px;
+      padding: 10px 12px;
+    }
+
+    textarea:focus,
+    .sync-input:focus {
+      border-color: var(--leaf);
+      box-shadow: 0 0 0 3px rgba(79, 143, 107, 0.12);
+    }
+
+    .sync-box {
+      display: grid;
+      gap: 10px;
+    }
+
+    details summary {
+      list-style: none;
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    details summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .sync-status {
+      padding: 10px 12px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(79, 143, 107, 0.22);
+      background: rgba(223, 240, 223, 0.72);
+      color: #315d45;
+      font-weight: 900;
+      line-height: 1.45;
+    }
+
+    .sync-status.warn {
+      border-color: var(--peach);
+      background: #fff0e9;
+      color: #8a3d31;
     }
 
     .summary {
-      margin-top: 14px;
       display: grid;
-      gap: 8px;
+      gap: 7px;
     }
 
     .summary-row {
       display: grid;
-      grid-template-columns: 84px 1fr;
+      grid-template-columns: 86px 1fr;
       gap: 10px;
-      align-items: start;
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(126, 111, 88, 0.14);
+      padding: 9px 0;
+      border-bottom: 1px solid rgba(122, 111, 97, 0.13);
       line-height: 1.45;
     }
 
@@ -345,12 +395,55 @@
     }
 
     .summary-row strong {
-      color: var(--muted);
+      color: var(--soft-ink);
       font-size: 0.82rem;
     }
 
     .summary-row span {
-      font-weight: 700;
+      font-weight: 900;
+    }
+
+    .record-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .record-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 11px 12px;
+      border: 1px solid rgba(122, 111, 97, 0.15);
+      border-radius: var(--radius);
+      background: rgba(255, 253, 246, 0.82);
+    }
+
+    .record-item b {
+      display: block;
+    }
+
+    .record-item span {
+      display: block;
+      margin-top: 2px;
+      color: var(--soft-ink);
+      font-size: 0.82rem;
+      line-height: 1.35;
+    }
+
+    .sync-mark {
+      padding: 6px 8px;
+      border-radius: 999px;
+      background: var(--leaf-soft);
+      color: #315d45;
+      font-size: 0.76rem;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .sync-mark.wait {
+      background: #fff0e9;
+      color: #8a3d31;
     }
 
     .bottom-bar {
@@ -359,169 +452,55 @@
       right: 0;
       bottom: 0;
       z-index: 30;
-      padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
-      background: rgba(247, 242, 234, 0.9);
+      padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+      background: rgba(255, 244, 223, 0.92);
       backdrop-filter: blur(18px);
-      border-top: 1px solid rgba(126, 111, 88, 0.18);
+      border-top: 1px solid rgba(122, 111, 97, 0.16);
     }
 
     .bottom-inner {
-      width: min(100%, 760px);
+      width: min(100%, 780px);
       margin: 0 auto;
       display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 10px;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 9px;
     }
 
     .primary,
     .secondary {
       min-height: 52px;
       border-radius: var(--radius);
-      font-weight: 900;
+      font-weight: 950;
     }
 
     .primary {
-      background: var(--mint-strong);
-      color: #f8fff8;
-      box-shadow: 0 10px 24px rgba(45, 107, 88, 0.22);
+      background: var(--leaf);
+      color: #fffdf6;
+      box-shadow: 0 10px 24px rgba(79, 143, 107, 0.24);
     }
 
     .secondary {
-      background: var(--panel);
-      color: var(--ink);
       border: 1px solid var(--line);
-    }
-
-    .records {
-      margin-top: 14px;
-    }
-
-    .record-list {
-      display: grid;
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .record-item {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 10px;
-      align-items: center;
-      padding: 12px;
-      border-radius: var(--radius);
-      background: rgba(255, 253, 247, 0.82);
-      border: 1px solid rgba(126, 111, 88, 0.15);
-    }
-
-    .record-item b {
-      display: block;
-      margin-bottom: 2px;
-    }
-
-    .record-item span {
-      color: var(--muted);
-      font-size: 0.84rem;
-      line-height: 1.4;
-    }
-
-    .record-item button {
-      width: 40px;
-      height: 40px;
-      border-radius: var(--radius);
-      background: #f6e6df;
-      color: var(--rose-strong);
-      font-weight: 900;
-    }
-
-    .cloud-grid {
-      display: grid;
-      gap: 10px;
-    }
-
-    .input-grid {
-      display: grid;
-      gap: 8px;
-    }
-
-    .input-grid.two {
-      grid-template-columns: 1fr;
-    }
-
-    .field {
-      display: grid;
-      gap: 5px;
-    }
-
-    .field span {
-      color: var(--muted);
-      font-size: 0.82rem;
-      font-weight: 800;
-    }
-
-    .field input {
-      width: 100%;
-      min-height: 48px;
-      padding: 10px 12px;
-      border-radius: var(--radius);
-      border: 1px solid var(--line);
-      background: #fffdf7;
+      background: var(--paper);
       color: var(--ink);
-      outline: 0;
-    }
-
-    .field input:focus {
-      border-color: var(--mint-strong);
-      box-shadow: 0 0 0 3px rgba(45, 107, 88, 0.12);
-    }
-
-    .cloud-actions {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px;
-    }
-
-    .cloud-actions .small-action {
-      min-height: 48px;
-    }
-
-    .cloud-status {
-      padding: 11px 12px;
-      border-radius: var(--radius);
-      background: rgba(185, 217, 202, 0.24);
-      border: 1px solid rgba(45, 107, 88, 0.2);
-      color: var(--mint-strong);
-      font-weight: 800;
-      line-height: 1.5;
-    }
-
-    .cloud-status.warn {
-      background: #fff1ed;
-      border-color: var(--rose);
-      color: var(--rose-strong);
-    }
-
-    .privacy-note {
-      color: var(--muted);
-      font-size: 0.82rem;
-      line-height: 1.55;
     }
 
     .toast {
       position: fixed;
       left: 50%;
       bottom: 86px;
-      z-index: 40;
+      z-index: 50;
       width: min(calc(100% - 28px), 440px);
-      transform: translate(-50%, 20px);
+      transform: translate(-50%, 18px);
       opacity: 0;
       pointer-events: none;
       padding: 12px 14px;
       border-radius: var(--radius);
-      background: #2f342f;
-      color: #fffaf1;
+      background: #3c362d;
+      color: #fffaf0;
       text-align: center;
-      font-weight: 800;
-      transition: opacity 180ms ease, transform 180ms ease;
+      font-weight: 900;
+      transition: opacity 160ms ease, transform 160ms ease;
     }
 
     .toast.show {
@@ -543,49 +522,28 @@
 
     @media (min-width: 680px) {
       .app {
-        padding-top: 24px;
+        padding-top: 20px;
       }
 
       .topbar {
-        margin-top: -24px;
+        margin-top: -20px;
       }
 
       h1 {
-        font-size: 1.42rem;
+        font-size: 1.45rem;
       }
 
-      .hero-grid {
-        grid-template-columns: 90px 1fr;
+      .hero-row {
+        grid-template-columns: 88px 1fr;
       }
 
-      .mark {
-        width: 90px;
-      }
-
-      .mark svg {
-        width: 42px;
-        height: 42px;
+      .fruit-badge {
+        width: 88px;
+        font-size: 2.55rem;
       }
 
       .chips {
         grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-
-      .chips.two {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .input-grid.two {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        transition-duration: 0.001ms !important;
-        scroll-behavior: auto !important;
       }
     }
   </style>
@@ -595,10 +553,10 @@
     <header class="topbar">
       <div class="topbar-inner">
         <div>
-          <h1>每日照護點選紀錄</h1>
-          <p class="subtitle">少打字，用點選留下有用線索</p>
+          <h1>果果照護日誌</h1>
+          <p class="subtitle">匿名水果代號，快速點選存紀錄</p>
         </div>
-        <label class="date-pill">
+        <label class="date-box">
           <span aria-hidden="true">日</span>
           <span class="sr-only">紀錄日期</span>
           <input id="recordDate" type="date">
@@ -606,110 +564,34 @@
       </div>
     </header>
 
-    <section class="hero" aria-label="操作捷徑">
-      <div class="hero-grid">
-        <div class="mark" aria-hidden="true">
-          <svg viewBox="0 0 48 48">
-            <path d="M15 24c0-7 4-12 10-12s10 5 10 12-4 12-10 12S15 31 15 24Z"></path>
-            <path d="M19 24h12"></path>
-            <path d="M24 18v12"></path>
-            <path d="M10 33c3 4 8 7 15 7 6 0 11-3 14-7"></path>
-          </svg>
-        </div>
+    <section class="hero" id="hero">
+      <div class="hero-row">
+        <div class="fruit-badge" id="activeFruitEmoji" aria-hidden="true">🍎</div>
         <div>
-          <h2>每天點一點，醫師比較容易看出變化。</h2>
-          <p>黃昏症候群看固定時段，譫妄看突然變化。先點最符合的狀況，空白也可以存。</p>
+          <h2 id="activeFruitTitle">蘋果個案</h2>
+          <p>不要輸入姓名。每位長輩用一種水果，切換水果後紀錄會分開保存。</p>
         </div>
       </div>
-      <div class="quick-actions">
-        <button class="small-action" type="button" data-date-offset="-1">昨天</button>
-        <button class="small-action" type="button" data-date-offset="0">今天</button>
-        <button class="small-action" type="button" id="quickCalm">一切平穩</button>
+      <div class="fruit-strip" id="fruitStrip" aria-label="選擇水果個案"></div>
+      <div class="quick-row">
+        <button class="quick-btn" type="button" data-date-offset="-1">昨天</button>
+        <button class="quick-btn" type="button" data-date-offset="0">今天</button>
+        <button class="quick-btn" type="button" id="quickCalm">平穩模板</button>
       </div>
     </section>
 
     <section class="section" data-section="overall">
       <div class="section-head">
         <div>
-          <h2>今天整體狀態</h2>
-          <p class="hint">和他平常的狀態相比</p>
+          <h2>整體狀態</h2>
+          <p class="hint">先點最接近平常的變化</p>
         </div>
-        <span class="status-dot" aria-hidden="true"></span>
+        <span class="done-dot" aria-hidden="true"></span>
       </div>
       <div class="chips three" data-field="overall" data-type="single">
         <button class="chip" type="button" data-value="比平常好">比平常好</button>
         <button class="chip" type="button" data-value="差不多">差不多</button>
-        <button class="chip warning" type="button" data-value="比平常差">比平常差</button>
-      </div>
-    </section>
-
-    <section class="section" data-section="sleep">
-      <div class="section-head">
-        <div>
-          <h2>睡眠</h2>
-          <p class="hint">不需要精準計算，點大概就好</p>
-        </div>
-        <span class="status-dot" aria-hidden="true"></span>
-      </div>
-      <div class="group">
-        <div class="label">昨晚大約睡多久</div>
-        <div class="chips four" data-field="sleepHours" data-type="single">
-          <button class="chip warning" type="button" data-value="少於4小時">少於4</button>
-          <button class="chip" type="button" data-value="4到6小時">4到6</button>
-          <button class="chip" type="button" data-value="6到8小時">6到8</button>
-          <button class="chip" type="button" data-value="超過8小時">超過8</button>
-        </div>
-      </div>
-      <div class="group">
-        <div class="label">睡眠狀況</div>
-        <div class="chips" data-field="sleepIssues" data-type="multi">
-          <button class="chip" type="button" data-value="睡得安穩">睡得安穩</button>
-          <button class="chip warning" type="button" data-value="容易醒">容易醒</button>
-          <button class="chip warning" type="button" data-value="半夜走動">半夜走動</button>
-          <button class="chip warning" type="button" data-value="日夜顛倒">日夜顛倒</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" data-section="body">
-      <div class="section-head">
-        <div>
-          <h2>身體與生活</h2>
-          <p class="hint">感染、疼痛、便秘常會讓混亂變嚴重</p>
-        </div>
-        <span class="status-dot" aria-hidden="true"></span>
-      </div>
-      <div class="group">
-        <div class="label">吃喝</div>
-        <div class="chips" data-field="foodWater" data-type="multi">
-          <button class="chip" type="button" data-value="食慾好">食慾好</button>
-          <button class="chip" type="button" data-value="食慾普通">食慾普通</button>
-          <button class="chip warning" type="button" data-value="食慾差">食慾差</button>
-          <button class="chip warning" type="button" data-value="喝水少">喝水少</button>
-          <button class="chip warning" type="button" data-value="拒絕吃喝">拒絕吃喝</button>
-        </div>
-      </div>
-      <div class="group">
-        <div class="label">排尿排便</div>
-        <div class="chips" data-field="toilet" data-type="multi">
-          <button class="chip" type="button" data-value="正常">正常</button>
-          <button class="chip warning" type="button" data-value="頻尿">頻尿</button>
-          <button class="chip warning" type="button" data-value="尿痛">尿痛</button>
-          <button class="chip warning" type="button" data-value="尿味重">尿味重</button>
-          <button class="chip warning" type="button" data-value="便秘">便秘</button>
-          <button class="chip warning" type="button" data-value="腹瀉">腹瀉</button>
-        </div>
-      </div>
-      <div class="group">
-        <div class="label">身體不適</div>
-        <div class="chips" data-field="bodySignals" data-type="multi">
-          <button class="chip" type="button" data-value="沒有不適">沒有不適</button>
-          <button class="chip warning" type="button" data-value="疼痛">疼痛</button>
-          <button class="chip warning" type="button" data-value="發燒">發燒</button>
-          <button class="chip warning" type="button" data-value="咳嗽喘">咳嗽喘</button>
-          <button class="chip warning" type="button" data-value="跌倒受傷">跌倒受傷</button>
-          <button class="chip warning" type="button" data-value="新藥或換藥">新藥或換藥</button>
-        </div>
+        <button class="chip warn" type="button" data-value="比平常差">比平常差</button>
       </div>
     </section>
 
@@ -717,44 +599,17 @@
       <div class="section-head">
         <div>
           <h2>心情</h2>
-          <p class="hint">可複選，再點嚴重度</p>
+          <p class="hint">可複選</p>
         </div>
-        <span class="status-dot" aria-hidden="true"></span>
+        <span class="done-dot" aria-hidden="true"></span>
       </div>
       <div class="chips" data-field="mood" data-type="multi">
         <button class="chip" type="button" data-value="平穩">平穩</button>
-        <button class="chip warning" type="button" data-value="焦慮">焦慮</button>
-        <button class="chip warning" type="button" data-value="低落">低落</button>
-        <button class="chip warning" type="button" data-value="易怒">易怒</button>
-        <button class="chip warning" type="button" data-value="害怕">害怕</button>
-        <button class="chip warning" type="button" data-value="哭泣">哭泣</button>
-      </div>
-      <div class="group">
-        <div class="label">心情嚴重度</div>
-        <div class="severity" data-field="moodSeverity" data-type="single">
-          <button class="chip" type="button" data-value="0 無">0 無</button>
-          <button class="chip" type="button" data-value="1 輕微">1 輕微</button>
-          <button class="chip warning" type="button" data-value="2 中等">2 中等</button>
-          <button class="chip warning" type="button" data-value="3 嚴重">3 嚴重</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" data-section="mind">
-      <div class="section-head">
-        <div>
-          <h2>認知與注意力</h2>
-          <p class="hint">特別注意「和平常不同」</p>
-        </div>
-        <span class="status-dot" aria-hidden="true"></span>
-      </div>
-      <div class="chips" data-field="mind" data-type="multi">
-        <button class="chip" type="button" data-value="清楚">清楚</button>
-        <button class="chip warning" type="button" data-value="比平常混亂">比平常混亂</button>
-        <button class="chip warning" type="button" data-value="注意力差">注意力差</button>
-        <button class="chip warning" type="button" data-value="嗜睡叫不太醒">嗜睡叫不太醒</button>
-        <button class="chip warning" type="button" data-value="特別躁動">特別躁動</button>
-        <button class="chip warning" type="button" data-value="不認得人或地方">不認得人地</button>
+        <button class="chip warn" type="button" data-value="焦慮">焦慮</button>
+        <button class="chip warn" type="button" data-value="易怒">易怒</button>
+        <button class="chip warn" type="button" data-value="低落">低落</button>
+        <button class="chip warn" type="button" data-value="害怕">害怕</button>
+        <button class="chip warn" type="button" data-value="哭泣">哭泣</button>
       </div>
     </section>
 
@@ -762,64 +617,32 @@
       <div class="section-head">
         <div>
           <h2>行為</h2>
-          <p class="hint">點今天出現過的行為</p>
+          <p class="hint">今天有出現就點</p>
         </div>
-        <span class="status-dot" aria-hidden="true"></span>
+        <span class="done-dot" aria-hidden="true"></span>
       </div>
       <div class="chips" data-field="behavior" data-type="multi">
-        <button class="chip warning" type="button" data-value="遊走">遊走</button>
-        <button class="chip warning" type="button" data-value="翻找東西">翻找東西</button>
-        <button class="chip warning" type="button" data-value="拒絕照護">拒絕照護</button>
-        <button class="chip warning" type="button" data-value="叫喊">叫喊</button>
-        <button class="chip warning" type="button" data-value="攻擊">攻擊</button>
-        <button class="chip warning" type="button" data-value="妄想">妄想</button>
-        <button class="chip warning" type="button" data-value="幻覺">幻覺</button>
-        <button class="chip warning" type="button" data-value="一直重複問">重複問</button>
-        <button class="chip warning" type="button" data-value="一直想回家">想回家</button>
-      </div>
-      <div class="group">
-        <div class="label">行為嚴重度</div>
-        <div class="severity" data-field="behaviorSeverity" data-type="single">
-          <button class="chip" type="button" data-value="0 無">0 無</button>
-          <button class="chip" type="button" data-value="1 輕微">1 輕微</button>
-          <button class="chip warning" type="button" data-value="2 中等">2 中等</button>
-          <button class="chip warning" type="button" data-value="3 嚴重">3 嚴重</button>
-        </div>
+        <button class="chip warn" type="button" data-value="遊走">遊走</button>
+        <button class="chip warn" type="button" data-value="拒絕照護">拒照護</button>
+        <button class="chip warn" type="button" data-value="重複問">重複問</button>
+        <button class="chip warn" type="button" data-value="幻覺">幻覺</button>
+        <button class="chip warn" type="button" data-value="妄想">妄想</button>
+        <button class="chip warn" type="button" data-value="攻擊">攻擊</button>
       </div>
     </section>
 
-    <section class="section" data-section="sundowning">
+    <section class="section" data-section="sundown">
       <div class="section-head">
         <div>
           <h2>黃昏症候群</h2>
-          <p class="hint">下午、傍晚到夜間是否變得更混亂或焦躁</p>
+          <p class="hint">傍晚到夜間是否變得更混亂或焦躁</p>
         </div>
-        <span class="status-dot" aria-hidden="true"></span>
+        <span class="done-dot" aria-hidden="true"></span>
       </div>
-      <div class="chips three" data-field="sundowning" data-type="single">
+      <div class="chips three" data-field="sundown" data-type="single">
         <button class="chip" type="button" data-value="沒有">沒有</button>
-        <button class="chip warning" type="button" data-value="疑似">疑似</button>
-        <button class="chip warning" type="button" data-value="明顯">明顯</button>
-      </div>
-      <div class="group">
-        <div class="label">大約時段</div>
-        <div class="chips four" data-field="sundowningTime" data-type="single">
-          <button class="chip" type="button" data-value="15-17點">15-17</button>
-          <button class="chip" type="button" data-value="17-19點">17-19</button>
-          <button class="chip" type="button" data-value="19-21點">19-21</button>
-          <button class="chip" type="button" data-value="21點後">21後</button>
-        </div>
-      </div>
-      <div class="group">
-        <div class="label">出現症狀</div>
-        <div class="chips" data-field="sundowningSymptoms" data-type="multi">
-          <button class="chip warning" type="button" data-value="焦躁">焦躁</button>
-          <button class="chip warning" type="button" data-value="混亂">混亂</button>
-          <button class="chip warning" type="button" data-value="遊走">遊走</button>
-          <button class="chip warning" type="button" data-value="幻覺妄想">幻覺妄想</button>
-          <button class="chip warning" type="button" data-value="害怕">害怕</button>
-          <button class="chip warning" type="button" data-value="不睡">不睡</button>
-        </div>
+        <button class="chip warn" type="button" data-value="疑似">疑似</button>
+        <button class="chip warn" type="button" data-value="明顯">明顯</button>
       </div>
     </section>
 
@@ -827,180 +650,192 @@
       <div class="section-head">
         <div>
           <h2>譫妄警訊</h2>
-          <p class="hint">譫妄常是突然發生、一天內忽好忽壞</p>
+          <p class="hint">突然改變、忽好忽壞要特別注意</p>
         </div>
-        <span class="status-dot" aria-hidden="true"></span>
+        <span class="done-dot" aria-hidden="true"></span>
       </div>
       <div class="chips" data-field="delirium" data-type="multi">
-        <button class="chip warning" type="button" data-value="數小時到幾天內突然變混亂">突然變混亂</button>
-        <button class="chip warning" type="button" data-value="一天內忽好忽壞">忽好忽壞</button>
-        <button class="chip warning" type="button" data-value="注意力明顯變差">注意力變差</button>
-        <button class="chip warning" type="button" data-value="嗜睡或叫不太醒">嗜睡叫不醒</button>
-        <button class="chip warning" type="button" data-value="發燒或疑似感染">發燒感染</button>
-        <button class="chip warning" type="button" data-value="跌倒後變怪">跌倒後變怪</button>
-      </div>
-      <div id="deliriumAlert" class="alert" role="status">
-        有譫妄警訊時，請盡快聯絡醫師。若突然叫不醒、跌倒後意識改變、呼吸困難或高燒，建議立即就醫。
+        <button class="chip warn" type="button" data-value="突然混亂">突然混亂</button>
+        <button class="chip warn" type="button" data-value="忽好忽壞">忽好忽壞</button>
+        <button class="chip warn" type="button" data-value="注意力差">注意力差</button>
+        <button class="chip warn" type="button" data-value="嗜睡叫不醒">嗜睡叫不醒</button>
+        <button class="chip warn" type="button" data-value="發燒感染">發燒感染</button>
+        <button class="chip warn" type="button" data-value="跌倒後變怪">跌倒後變怪</button>
       </div>
     </section>
 
-    <section class="section" data-section="support">
+    <section class="section" data-section="body">
       <div class="section-head">
         <div>
-          <h2>可能誘因與安撫方式</h2>
-          <p class="hint">這些能幫忙找出下次怎麼預防</p>
+          <h2>身體生活</h2>
+          <p class="hint">只點異常或照護重點</p>
         </div>
-        <span class="status-dot" aria-hidden="true"></span>
+        <span class="done-dot" aria-hidden="true"></span>
       </div>
       <div class="group">
-        <div class="label">可能誘因</div>
-        <div class="chips" data-field="triggers" data-type="multi">
-          <button class="chip warning" type="button" data-value="睡不好">睡不好</button>
-          <button class="chip warning" type="button" data-value="疼痛">疼痛</button>
-          <button class="chip warning" type="button" data-value="便秘">便秘</button>
-          <button class="chip warning" type="button" data-value="尿路感染疑慮">尿路感染疑慮</button>
-          <button class="chip warning" type="button" data-value="太吵或太暗">太吵太暗</button>
-          <button class="chip warning" type="button" data-value="陌生環境">陌生環境</button>
-          <button class="chip warning" type="button" data-value="換照護者">換照護者</button>
-          <button class="chip warning" type="button" data-value="藥物改變">藥物改變</button>
+        <div class="label">睡眠與吃喝</div>
+        <div class="chips" data-field="daily" data-type="multi">
+          <button class="chip" type="button" data-value="睡得安穩">睡得安穩</button>
+          <button class="chip warn" type="button" data-value="睡不好">睡不好</button>
+          <button class="chip" type="button" data-value="食慾普通">食慾普通</button>
+          <button class="chip warn" type="button" data-value="吃少">吃少</button>
+          <button class="chip warn" type="button" data-value="喝水少">喝水少</button>
         </div>
       </div>
       <div class="group">
-        <div class="label">安撫方式</div>
-        <div class="chips" data-field="comfort" data-type="multi">
-          <button class="chip" type="button" data-value="陪伴">陪伴</button>
-          <button class="chip" type="button" data-value="音樂">音樂</button>
-          <button class="chip" type="button" data-value="散步">散步</button>
-          <button class="chip" type="button" data-value="開燈">開燈</button>
-          <button class="chip" type="button" data-value="喝水點心">喝水點心</button>
-          <button class="chip" type="button" data-value="如廁">如廁</button>
-          <button class="chip" type="button" data-value="降低聲音">降低聲音</button>
-          <button class="chip" type="button" data-value="戴眼鏡或助聽器">眼鏡助聽器</button>
+        <div class="label">排泄與不適</div>
+        <div class="chips" data-field="body" data-type="multi">
+          <button class="chip" type="button" data-value="排泄正常">排泄正常</button>
+          <button class="chip warn" type="button" data-value="便秘">便秘</button>
+          <button class="chip warn" type="button" data-value="腹瀉">腹瀉</button>
+          <button class="chip warn" type="button" data-value="頻尿尿痛">頻尿尿痛</button>
+          <button class="chip warn" type="button" data-value="疼痛">疼痛</button>
+          <button class="chip warn" type="button" data-value="跌倒受傷">跌倒受傷</button>
         </div>
       </div>
+    </section>
+
+    <section class="section" data-section="comfort">
+      <div class="section-head">
+        <div>
+          <h2>安撫方式</h2>
+          <p class="hint">下次照護會用得上</p>
+        </div>
+        <span class="done-dot" aria-hidden="true"></span>
+      </div>
+      <div class="chips" data-field="comfort" data-type="multi">
+        <button class="chip" type="button" data-value="陪伴">陪伴</button>
+        <button class="chip" type="button" data-value="音樂">音樂</button>
+        <button class="chip" type="button" data-value="散步">散步</button>
+        <button class="chip" type="button" data-value="點心喝水">點心喝水</button>
+        <button class="chip" type="button" data-value="如廁">如廁</button>
+        <button class="chip" type="button" data-value="降低刺激">降低刺激</button>
+      </div>
       <div class="group">
-        <div class="label">是否有效</div>
-        <div class="chips three" data-field="comfortEffect" data-type="single">
+        <div class="label">效果</div>
+        <div class="chips three" data-field="effect" data-type="single">
           <button class="chip" type="button" data-value="有效">有效</button>
-          <button class="chip" type="button" data-value="部分有效">部分有效</button>
-          <button class="chip warning" type="button" data-value="無效">無效</button>
+          <button class="chip" type="button" data-value="一點點">一點點</button>
+          <button class="chip warn" type="button" data-value="無效">無效</button>
         </div>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="summaryTitle">
+    <section class="section">
       <div class="section-head">
         <div>
-          <h2 id="summaryTitle">今天摘要</h2>
-          <p class="hint">儲存前先看一次，空白項目會自動略過</p>
+          <h2>備註</h2>
+          <p class="hint">可不填，需要時打一小句就好</p>
+        </div>
+      </div>
+      <textarea id="note" placeholder="例如：下午換環境後比較焦躁"></textarea>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>今天摘要</h2>
+          <p class="hint">按儲存前看一下</p>
         </div>
       </div>
       <div id="summary" class="summary"></div>
     </section>
 
-    <section class="section records" aria-labelledby="recordsTitle">
-      <div class="section-head">
-        <div>
-          <h2 id="recordsTitle">已存紀錄</h2>
-          <p class="hint">本機先存一份，雲端同步後換手機也能下載</p>
+    <section class="section">
+      <details>
+        <summary>Google 試算表同步</summary>
+        <div class="sync-box" style="margin-top:10px">
+          <div id="syncStatus" class="sync-status warn">尚未設定同步網址。先照 README 貼上 Apps Script 網址即可。</div>
+          <input id="syncUrl" class="sync-input" type="url" inputmode="url" placeholder="貼上 Google Apps Script 同步網址">
+          <div class="quick-row">
+            <button class="small-btn" type="button" id="saveSyncUrl">儲存網址</button>
+            <button class="small-btn" type="button" id="syncToday">同步今天</button>
+            <button class="small-btn" type="button" id="syncPending">補送未同步</button>
+          </div>
         </div>
-      </div>
-      <div class="quick-actions">
-        <button class="small-action" type="button" id="exportCsv">匯出 CSV</button>
-        <button class="small-action" type="button" id="copySummary">複製摘要</button>
-        <button class="small-action" type="button" id="clearToday">清空今天</button>
-      </div>
-      <div id="recordList" class="record-list"></div>
+      </details>
     </section>
 
-    <section class="section" aria-labelledby="cloudTitle">
+    <section class="section">
       <div class="section-head">
         <div>
-          <h2 id="cloudTitle">雲端同步</h2>
-          <p class="hint">使用 Supabase 登入後，可把紀錄同步到雲端資料庫</p>
+          <h2>已存紀錄</h2>
+          <p class="hint" id="recordHint">目前水果的最近紀錄</p>
         </div>
       </div>
-      <div class="cloud-grid">
-        <div id="cloudStatus" class="cloud-status warn">尚未設定雲端。先建立 Supabase 專案並執行 SQL，再填入網址與 anon key。</div>
-        <div class="input-grid">
-          <label class="field">
-            <span>Supabase Project URL</span>
-            <input id="cloudUrl" type="url" inputmode="url" autocomplete="off" placeholder="https://xxxx.supabase.co">
-          </label>
-          <label class="field">
-            <span>Supabase anon public key</span>
-            <input id="cloudKey" type="password" autocomplete="off" placeholder="eyJ...">
-          </label>
-        </div>
-        <div class="input-grid two">
-          <label class="field">
-            <span>登入 Email</span>
-            <input id="cloudEmail" type="email" inputmode="email" autocomplete="username" placeholder="you@example.com">
-          </label>
-          <label class="field">
-            <span>密碼</span>
-            <input id="cloudPassword" type="password" autocomplete="current-password" placeholder="至少 6 位">
-          </label>
-        </div>
-        <div class="cloud-actions">
-          <button class="small-action" type="button" id="saveCloudConfig">儲存設定</button>
-          <button class="small-action" type="button" id="signUpCloud">建立帳號</button>
-          <button class="small-action" type="button" id="signInCloud">登入</button>
-          <button class="small-action" type="button" id="signOutCloud">登出</button>
-          <button class="small-action" type="button" id="uploadCloud">上傳雲端</button>
-          <button class="small-action" type="button" id="downloadCloud">下載雲端</button>
-        </div>
-        <p class="privacy-note">按「上傳雲端」才會把本機紀錄傳到你的 Supabase 專案。此資料可能包含健康照護資訊，建議只使用你信任且有登入保護的資料庫。</p>
+      <div class="quick-row" style="margin-bottom:10px">
+        <button class="small-btn" type="button" id="exportCsv">匯出 CSV</button>
+        <button class="small-btn" type="button" id="copyToday">複製摘要</button>
+        <button class="small-btn" type="button" id="clearToday">清空今天</button>
       </div>
+      <div id="recordList" class="record-list"></div>
     </section>
   </main>
 
   <div class="bottom-bar">
     <div class="bottom-inner">
       <button class="primary" type="button" id="saveRecord">儲存今天</button>
-      <button class="secondary" type="button" id="scrollSummary">看摘要</button>
+      <button class="secondary" type="button" id="jumpRecords">看紀錄</button>
     </div>
   </div>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script>
-    const storageKey = "dementiaDailyTapRecords.v1";
-    const cloudConfigKey = "dementiaDailyTapCloud.v1";
-    const supabaseCdn = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+    const recordsKey = "fruitCareRecords.v1";
+    const activeFruitKey = "fruitCareActive.v1";
+    const syncUrlKey = "fruitCareGoogleScriptUrl.v1";
+
+    const fruits = [
+      ["apple", "🍎", "蘋果", "#ffd0c8"],
+      ["banana", "🍌", "香蕉", "#ffe28a"],
+      ["grape", "🍇", "葡萄", "#d7c6ff"],
+      ["orange", "🍊", "橘子", "#ffd2a6"],
+      ["strawberry", "🍓", "草莓", "#ffc1cf"],
+      ["mango", "🥭", "芒果", "#ffd890"],
+      ["pineapple", "🍍", "鳳梨", "#f4df78"],
+      ["kiwi", "🥝", "奇異果", "#c9e58f"],
+      ["peach", "🍑", "水蜜桃", "#ffc7b5"],
+      ["pear", "🍐", "梨子", "#dceb9f"],
+      ["watermelon", "🍉", "西瓜", "#c5efbc"],
+      ["cherry", "🍒", "櫻桃", "#ffb1bd"],
+      ["blueberry", "🫐", "藍莓", "#c8d5ff"],
+      ["lemon", "🍋", "檸檬", "#ffe98a"],
+      ["coconut", "🥥", "椰子", "#dec7a7"],
+      ["melon", "🍈", "哈密瓜", "#cfeaa9"],
+      ["papaya", "🟧", "木瓜", "#ffc078"],
+      ["persimmon", "🟠", "柿子", "#ffbd8f"],
+      ["tomato", "🍅", "番茄", "#ffb0a6"],
+      ["avocado", "🥑", "酪梨", "#bfe2a1"]
+    ].map(([id, emoji, name, color], index) => ({ id, emoji, name, color, code: String(index + 1).padStart(2, "0") }));
+
     const fields = [
       ["overall", "整體"],
-      ["sleepHours", "睡眠時間"],
-      ["sleepIssues", "睡眠狀況"],
-      ["foodWater", "吃喝"],
-      ["toilet", "排尿排便"],
-      ["bodySignals", "身體不適"],
       ["mood", "心情"],
-      ["moodSeverity", "心情嚴重度"],
-      ["mind", "認知注意力"],
       ["behavior", "行為"],
-      ["behaviorSeverity", "行為嚴重度"],
-      ["sundowning", "黃昏症候群"],
-      ["sundowningTime", "黃昏時段"],
-      ["sundowningSymptoms", "黃昏症狀"],
-      ["delirium", "譫妄警訊"],
-      ["triggers", "可能誘因"],
-      ["comfort", "安撫方式"],
-      ["comfortEffect", "安撫效果"]
+      ["sundown", "黃昏"],
+      ["delirium", "譫妄"],
+      ["daily", "睡眠吃喝"],
+      ["body", "身體排泄"],
+      ["comfort", "安撫"],
+      ["effect", "效果"]
     ];
 
     const state = {};
+    let activeFruitId = localStorage.getItem(activeFruitKey) || fruits[0].id;
+
     const dateInput = document.querySelector("#recordDate");
-    const summaryEl = document.querySelector("#summary");
+    const fruitStrip = document.querySelector("#fruitStrip");
+    const hero = document.querySelector("#hero");
+    const activeFruitEmoji = document.querySelector("#activeFruitEmoji");
+    const activeFruitTitle = document.querySelector("#activeFruitTitle");
+    const summary = document.querySelector("#summary");
     const recordList = document.querySelector("#recordList");
-    const deliriumAlert = document.querySelector("#deliriumAlert");
+    const recordHint = document.querySelector("#recordHint");
+    const noteInput = document.querySelector("#note");
     const toast = document.querySelector("#toast");
-    const cloudStatus = document.querySelector("#cloudStatus");
-    const cloudUrlInput = document.querySelector("#cloudUrl");
-    const cloudKeyInput = document.querySelector("#cloudKey");
-    const cloudEmailInput = document.querySelector("#cloudEmail");
-    const cloudPasswordInput = document.querySelector("#cloudPassword");
-    let supabaseClient = null;
+    const syncUrlInput = document.querySelector("#syncUrl");
+    const syncStatus = document.querySelector("#syncStatus");
 
     function todayValue(offset = 0) {
       const date = new Date();
@@ -1009,120 +844,52 @@
       return local.toISOString().slice(0, 10);
     }
 
+    function getFruit(id = activeFruitId) {
+      return fruits.find(fruit => fruit.id === id) || fruits[0];
+    }
+
+    function fruitLabel(id = activeFruitId) {
+      const fruit = getFruit(id);
+      return `${fruit.name}${fruit.code}`;
+    }
+
     function loadRecords() {
       try {
-        return JSON.parse(localStorage.getItem(storageKey)) || [];
+        return JSON.parse(localStorage.getItem(recordsKey)) || [];
       } catch {
         return [];
       }
     }
 
     function saveRecords(records) {
-      localStorage.setItem(storageKey, JSON.stringify(records));
-    }
-
-    function loadCloudConfig() {
-      try {
-        return JSON.parse(localStorage.getItem(cloudConfigKey)) || {};
-      } catch {
-        return {};
-      }
-    }
-
-    function getCloudConfigFromInputs() {
-      return {
-        url: cloudUrlInput.value.trim(),
-        key: cloudKeyInput.value.trim(),
-        email: cloudEmailInput.value.trim()
-      };
-    }
-
-    function applyCloudConfig() {
-      const config = loadCloudConfig();
-      cloudUrlInput.value = config.url || "";
-      cloudKeyInput.value = config.key || "";
-      cloudEmailInput.value = config.email || "";
-      if (config.url && config.key) {
-        setCloudStatus("雲端設定已儲存。請登入後同步。");
-      }
-    }
-
-    function setCloudStatus(message, tone = "ok") {
-      cloudStatus.textContent = message;
-      cloudStatus.classList.toggle("warn", tone === "warn");
-    }
-
-    function saveCloudConfig() {
-      const config = getCloudConfigFromInputs();
-      if (!config.url || !config.key) {
-        setCloudStatus("請先填入 Supabase Project URL 和 anon public key。", "warn");
-        return false;
-      }
-      localStorage.setItem(cloudConfigKey, JSON.stringify(config));
-      supabaseClient = null;
-      setCloudStatus("雲端設定已儲存。接著登入或建立帳號。");
-      showToast("雲端設定已儲存");
-      return true;
-    }
-
-    function ensureSupabaseLib() {
-      if (window.supabase) return Promise.resolve();
-      return new Promise((resolve, reject) => {
-        const existing = document.querySelector(`script[src="${supabaseCdn}"]`);
-        if (existing) {
-          existing.addEventListener("load", resolve, { once: true });
-          existing.addEventListener("error", reject, { once: true });
-          return;
-        }
-        const script = document.createElement("script");
-        script.src = supabaseCdn;
-        script.onload = resolve;
-        script.onerror = () => reject(new Error("無法載入 Supabase，同步需要網路連線。"));
-        document.head.appendChild(script);
-      });
-    }
-
-    async function getSupabaseClient() {
-      const config = loadCloudConfig();
-      if (!config.url || !config.key) {
-        throw new Error("尚未儲存 Supabase 設定。");
-      }
-      await ensureSupabaseLib();
-      if (!supabaseClient) {
-        supabaseClient = window.supabase.createClient(config.url, config.key, {
-          auth: {
-            persistSession: true,
-            autoRefreshToken: true,
-            storageKey: "dementia-care-cloud-auth"
-          }
-        });
-      }
-      return supabaseClient;
-    }
-
-    async function getCloudUser() {
-      const client = await getSupabaseClient();
-      const { data, error } = await client.auth.getUser();
-      if (error || !data.user) {
-        throw new Error("請先登入雲端帳號。");
-      }
-      return { client, user: data.user };
+      localStorage.setItem(recordsKey, JSON.stringify(records));
     }
 
     function normalizeField(field) {
       const group = document.querySelector(`[data-field="${field}"]`);
-      if (!group) return [];
-      return group.dataset.type === "multi" ? [] : "";
+      return group && group.dataset.type === "multi" ? [] : "";
     }
 
     function resetState() {
       fields.forEach(([field]) => {
         state[field] = normalizeField(field);
       });
+      noteInput.value = "";
     }
 
-    function setChipPressed(button, pressed) {
-      button.setAttribute("aria-pressed", pressed ? "true" : "false");
+    function renderFruits() {
+      fruitStrip.innerHTML = fruits.map(fruit => `
+        <button class="fruit-card" type="button" data-fruit="${fruit.id}" style="--fruit-color:${fruit.color}" aria-pressed="${fruit.id === activeFruitId ? "true" : "false"}">
+          <span class="emoji">${fruit.emoji}</span>
+          <span>${fruit.name}</span>
+          <small>${fruit.code}</small>
+        </button>
+      `).join("");
+      const fruit = getFruit();
+      hero.style.setProperty("--active-color", fruit.color);
+      activeFruitEmoji.textContent = fruit.emoji;
+      activeFruitTitle.textContent = `${fruit.name}${fruit.code}`;
+      recordHint.textContent = `${fruit.name}${fruit.code} 的最近紀錄`;
     }
 
     function syncButtons() {
@@ -1133,46 +900,37 @@
           const selected = Array.isArray(value)
             ? value.includes(button.dataset.value)
             : value === button.dataset.value;
-          setChipPressed(button, selected);
+          button.setAttribute("aria-pressed", selected ? "true" : "false");
         });
       });
+
       document.querySelectorAll(".section[data-section]").forEach(section => {
-        const selected = [...section.querySelectorAll("[data-field]")].some(group => {
+        const touched = [...section.querySelectorAll("[data-field]")].some(group => {
           const value = state[group.dataset.field];
           return Array.isArray(value) ? value.length > 0 : Boolean(value);
         });
-        section.dataset.touched = selected ? "true" : "false";
+        section.dataset.touched = touched ? "true" : "false";
       });
-      deliriumAlert.classList.toggle("show", Array.isArray(state.delirium) && state.delirium.length > 0);
     }
 
     function renderSummary() {
-      const rows = fields
-        .map(([field, label]) => {
+      const rows = [
+        ["水果", fruitLabel()],
+        ["日期", dateInput.value],
+        ...fields.map(([field, label]) => {
           const value = state[field];
           const text = Array.isArray(value) ? value.join("、") : value;
-          return text ? { label, text } : null;
-        })
-        .filter(Boolean);
+          return text ? [label, text] : null;
+        }).filter(Boolean)
+      ];
+      if (noteInput.value.trim()) rows.push(["備註", noteInput.value.trim()]);
 
-      if (!rows.length) {
-        summaryEl.innerHTML = `<div class="summary-row"><strong>狀態</strong><span>還沒有點選項目</span></div>`;
-        return;
-      }
-
-      summaryEl.innerHTML = rows.map(row => `
+      summary.innerHTML = rows.map(([label, text]) => `
         <div class="summary-row">
-          <strong>${escapeHtml(row.label)}</strong>
-          <span>${escapeHtml(row.text)}</span>
+          <strong>${escapeHtml(label)}</strong>
+          <span>${escapeHtml(text)}</span>
         </div>
       `).join("");
-    }
-
-    function showToast(message) {
-      toast.textContent = message;
-      toast.classList.add("show");
-      clearTimeout(showToast.timer);
-      showToast.timer = setTimeout(() => toast.classList.remove("show"), 1800);
     }
 
     function escapeHtml(value) {
@@ -1184,10 +942,23 @@
         .replaceAll("'", "&#039;");
     }
 
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toast.classList.remove("show"), 1800);
+    }
+
     function currentRecord() {
+      const fruit = getFruit();
       const record = {
+        id: `${fruit.id}-${dateInput.value}`,
         date: dateInput.value,
-        savedAt: new Date().toISOString()
+        residentId: fruit.id,
+        residentLabel: `${fruit.name}${fruit.code}`,
+        residentFruit: fruit.name,
+        savedAt: new Date().toISOString(),
+        note: noteInput.value.trim()
       };
       fields.forEach(([field]) => {
         record[field] = Array.isArray(state[field]) ? [...state[field]] : state[field];
@@ -1202,38 +973,72 @@
           state[field] = Array.isArray(record[field]) ? [...record[field]] : record[field];
         }
       });
+      noteInput.value = record && record.note ? record.note : "";
       syncButtons();
       renderSummary();
     }
 
-    function saveCurrentRecord(options = {}) {
+    function findCurrentRecord() {
+      return loadRecords().find(record => record.residentId === activeFruitId && record.date === dateInput.value);
+    }
+
+    function upsertRecord(record) {
       const records = loadRecords();
-      const record = currentRecord();
-      const index = records.findIndex(item => item.date === record.date);
+      const index = records.findIndex(item => item.id === record.id);
       if (index >= 0) {
-        records[index] = record;
+        records[index] = { ...records[index], ...record, syncedAt: records[index].syncedAt || "" };
       } else {
         records.unshift(record);
       }
-      records.sort((a, b) => b.date.localeCompare(a.date));
+      records.sort((a, b) => b.date.localeCompare(a.date) || a.residentLabel.localeCompare(b.residentLabel));
       saveRecords(records);
+      return records.find(item => item.id === record.id);
+    }
+
+    async function saveCurrentRecord(options = {}) {
+      const record = upsertRecord(currentRecord());
       renderRecords();
-      if (!options.quiet) showToast("已儲存這一天");
+      renderSummary();
+      if (!options.quiet) showToast("已存到手機");
+      if (localStorage.getItem(syncUrlKey) && !options.skipSync) {
+        await syncRecords([record]);
+      }
+      return record;
+    }
+
+    function applyQuickCalm() {
+      resetState();
+      state.overall = "差不多";
+      state.mood = ["平穩"];
+      state.sundown = "沒有";
+      state.daily = ["睡得安穩", "食慾普通"];
+      state.body = ["排泄正常"];
+      state.effect = "有效";
+      syncButtons();
+      renderSummary();
+      showToast("已套用平穩模板");
+    }
+
+    function switchFruit(id) {
+      activeFruitId = id;
+      localStorage.setItem(activeFruitKey, id);
+      renderFruits();
+      loadRecordToScreen(findCurrentRecord());
+      renderRecords();
     }
 
     function renderRecords() {
-      const records = loadRecords();
+      const fruit = getFruit();
+      const records = loadRecords().filter(record => record.residentId === fruit.id);
       if (!records.length) {
-        recordList.innerHTML = `<div class="record-item"><div><b>還沒有紀錄</b><span>點選後按「儲存今天」就會出現在這裡。</span></div></div>`;
+        recordList.innerHTML = `<div class="record-item"><div><b>${escapeHtml(fruitLabel())}</b><span>還沒有紀錄。</span></div><span class="sync-mark wait">未存</span></div>`;
         return;
       }
-      recordList.innerHTML = records.slice(0, 14).map(record => {
+      recordList.innerHTML = records.slice(0, 10).map(record => {
         const flags = [
           record.overall,
-          record.moodSeverity,
-          record.behaviorSeverity,
-          record.sundowning ? `黃昏:${record.sundowning}` : "",
-          record.delirium && record.delirium.length ? "有譫妄警訊" : ""
+          record.sundown ? `黃昏:${record.sundown}` : "",
+          record.delirium && record.delirium.length ? `譫妄:${record.delirium.length}項` : ""
         ].filter(Boolean).join(" / ");
         return `
           <div class="record-item">
@@ -1241,206 +1046,149 @@
               <b>${escapeHtml(record.date)}</b>
               <span>${escapeHtml(flags || "已記錄")}</span>
             </div>
-            <button type="button" data-delete="${escapeHtml(record.date)}" aria-label="刪除 ${escapeHtml(record.date)}">刪</button>
+            <span class="sync-mark ${record.syncedAt ? "" : "wait"}">${record.syncedAt ? "已同步" : "待同步"}</span>
           </div>
         `;
       }).join("");
     }
 
-    function recordToSummary(record) {
-      const lines = [`日期：${record.date}`];
-      fields.forEach(([field, label]) => {
-        const value = record[field];
-        const text = Array.isArray(value) ? value.join("、") : value;
-        if (text) lines.push(`${label}：${text}`);
-      });
-      return lines.join("\n");
+    function flattenRecord(record) {
+      return {
+        syncedAt: new Date().toISOString(),
+        date: record.date,
+        residentLabel: record.residentLabel,
+        overall: record.overall || "",
+        mood: join(record.mood),
+        behavior: join(record.behavior),
+        sundown: record.sundown || "",
+        delirium: join(record.delirium),
+        daily: join(record.daily),
+        body: join(record.body),
+        comfort: join(record.comfort),
+        effect: record.effect || "",
+        note: record.note || "",
+        id: record.id
+      };
     }
 
-    function csvEscape(value) {
-      const text = Array.isArray(value) ? value.join("、") : (value || "");
-      return `"${String(text).replaceAll('"', '""')}"`;
+    function join(value) {
+      return Array.isArray(value) ? value.join("、") : (value || "");
+    }
+
+    async function syncRecords(records) {
+      const url = localStorage.getItem(syncUrlKey);
+      if (!url) {
+        setSyncStatus("尚未貼上 Google 同步網址。", "warn");
+        return;
+      }
+      if (!records.length) {
+        setSyncStatus("沒有需要同步的紀錄。");
+        return;
+      }
+      try {
+        const payload = {
+          app: "fruit-care-log",
+          version: 1,
+          records: records.map(flattenRecord)
+        };
+        await fetch(url, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload)
+        });
+        const now = new Date().toISOString();
+        const ids = new Set(records.map(record => record.id));
+        const all = loadRecords().map(record => ids.has(record.id) ? { ...record, syncedAt: now } : record);
+        saveRecords(all);
+        renderRecords();
+        setSyncStatus(`已送出 ${records.length} 筆到 Google 試算表。`);
+        showToast("已送出 Google");
+      } catch (error) {
+        setSyncStatus("同步失敗，請檢查同步網址或網路。", "warn");
+      }
+    }
+
+    function setSyncStatus(message, tone = "ok") {
+      syncStatus.textContent = message;
+      syncStatus.classList.toggle("warn", tone === "warn");
+    }
+
+    function saveSyncUrl() {
+      const url = syncUrlInput.value.trim();
+      if (!url) {
+        setSyncStatus("請貼上 Google Apps Script 同步網址。", "warn");
+        return;
+      }
+      localStorage.setItem(syncUrlKey, url);
+      setSyncStatus("同步網址已儲存。之後按儲存今天會自動送出。");
+      showToast("同步網址已存");
     }
 
     function exportCsv() {
       const records = loadRecords();
       if (!records.length) {
-        showToast("目前沒有紀錄可匯出");
+        showToast("還沒有紀錄可匯出");
         return;
       }
-      const header = ["日期", ...fields.map(([, label]) => label), "儲存時間"];
+      const headers = ["日期", "水果代號", "整體", "心情", "行為", "黃昏症候群", "譫妄警訊", "睡眠吃喝", "身體排泄", "安撫方式", "效果", "備註", "本機ID", "儲存時間", "同步時間"];
       const rows = records.map(record => [
         record.date,
-        ...fields.map(([field]) => record[field]),
-        record.savedAt
+        record.residentLabel,
+        record.overall,
+        join(record.mood),
+        join(record.behavior),
+        record.sundown,
+        join(record.delirium),
+        join(record.daily),
+        join(record.body),
+        join(record.comfort),
+        record.effect,
+        record.note,
+        record.id,
+        record.savedAt,
+        record.syncedAt
       ]);
-      const csv = "\ufeff" + [
-        header.map(csvEscape).join(","),
-        ...rows.map(row => row.map(csvEscape).join(","))
-      ].join("\n");
+      const csv = "\ufeff" + [headers, ...rows].map(row => row.map(csvEscape).join(",")).join("\n");
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
-      link.href = url;
-      link.download = `每日照護紀錄-${todayValue()}.csv`;
+      link.href = URL.createObjectURL(blob);
+      link.download = `果果照護日誌-${todayValue()}.csv`;
       document.body.appendChild(link);
       link.click();
+      URL.revokeObjectURL(link.href);
       link.remove();
-      URL.revokeObjectURL(url);
       showToast("CSV 已匯出");
     }
 
-    function cloudRowToRecord(row) {
-      const payload = row.payload || {};
-      return {
-        ...payload,
-        date: payload.date || row.record_date,
-        savedAt: payload.savedAt || row.saved_at || row.updated_at || new Date().toISOString()
-      };
+    function csvEscape(value) {
+      return `"${String(value || "").replaceAll('"', '""')}"`;
     }
 
-    function mergeRecords(localRecords, cloudRecords) {
-      const byDate = new Map();
-      [...localRecords, ...cloudRecords].forEach(record => {
-        if (!record || !record.date) return;
-        const existing = byDate.get(record.date);
-        const existingTime = existing ? Date.parse(existing.savedAt || "") || 0 : 0;
-        const nextTime = Date.parse(record.savedAt || "") || 0;
-        if (!existing || nextTime >= existingTime) {
-          byDate.set(record.date, record);
-        }
-      });
-      return [...byDate.values()].sort((a, b) => b.date.localeCompare(a.date));
-    }
-
-    async function signUpCloud() {
-      try {
-        if (!saveCloudConfig()) return;
-        const password = cloudPasswordInput.value;
-        if (!cloudEmailInput.value || !password) {
-          setCloudStatus("請填入 Email 和密碼。", "warn");
-          return;
-        }
-        const client = await getSupabaseClient();
-        const { error } = await client.auth.signUp({
-          email: cloudEmailInput.value.trim(),
-          password
-        });
-        if (error) throw error;
-        setCloudStatus("帳號已建立。若 Supabase 要求驗證 Email，請先到信箱完成驗證後再登入。");
-        showToast("帳號已建立");
-      } catch (error) {
-        setCloudStatus(error.message || "建立帳號失敗。", "warn");
-      }
-    }
-
-    async function signInCloud() {
-      try {
-        if (!saveCloudConfig()) return;
-        const password = cloudPasswordInput.value;
-        if (!cloudEmailInput.value || !password) {
-          setCloudStatus("請填入 Email 和密碼。", "warn");
-          return;
-        }
-        const client = await getSupabaseClient();
-        const { data, error } = await client.auth.signInWithPassword({
-          email: cloudEmailInput.value.trim(),
-          password
-        });
-        if (error) throw error;
-        setCloudStatus(`已登入雲端：${data.user.email}`);
-        cloudPasswordInput.value = "";
-        showToast("已登入雲端");
-      } catch (error) {
-        setCloudStatus(error.message || "登入失敗。", "warn");
-      }
-    }
-
-    async function signOutCloud() {
-      try {
-        const client = await getSupabaseClient();
-        await client.auth.signOut();
-        setCloudStatus("已登出雲端。");
-        showToast("已登出");
-      } catch (error) {
-        setCloudStatus(error.message || "登出失敗。", "warn");
-      }
-    }
-
-    async function uploadCloud() {
-      try {
-        saveCurrentRecord({ quiet: true });
-        const { client, user } = await getCloudUser();
-        const records = loadRecords();
-        if (!records.length) {
-          setCloudStatus("目前沒有紀錄可上傳。", "warn");
-          return;
-        }
-        const rows = records.map(record => ({
-          user_id: user.id,
-          record_date: record.date,
-          payload: record,
-          saved_at: record.savedAt || new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        }));
-        const { error } = await client
-          .from("care_records")
-          .upsert(rows, { onConflict: "user_id,record_date" });
-        if (error) throw error;
-        setCloudStatus(`已上傳 ${records.length} 筆紀錄到雲端。`);
-        showToast("已上傳雲端");
-      } catch (error) {
-        setCloudStatus(error.message || "上傳失敗，請確認 SQL 已建立資料表。", "warn");
-      }
-    }
-
-    async function downloadCloud() {
-      try {
-        const { client, user } = await getCloudUser();
-        const { data, error } = await client
-          .from("care_records")
-          .select("record_date,payload,saved_at,updated_at")
-          .eq("user_id", user.id)
-          .order("record_date", { ascending: false });
-        if (error) throw error;
-        const cloudRecords = (data || []).map(cloudRowToRecord);
-        const records = mergeRecords(loadRecords(), cloudRecords);
-        saveRecords(records);
-        const current = records.find(item => item.date === dateInput.value);
-        loadRecordToScreen(current);
-        renderRecords();
-        setCloudStatus(`已從雲端下載 ${cloudRecords.length} 筆，並和本機合併。`);
-        showToast("已下載雲端紀錄");
-      } catch (error) {
-        setCloudStatus(error.message || "下載失敗，請確認已登入。", "warn");
-      }
-    }
-
-    function applyQuickCalm() {
-      resetState();
-      state.overall = "差不多";
-      state.sleepIssues = ["睡得安穩"];
-      state.foodWater = ["食慾普通"];
-      state.toilet = ["正常"];
-      state.bodySignals = ["沒有不適"];
-      state.mood = ["平穩"];
-      state.moodSeverity = "0 無";
-      state.mind = ["清楚"];
-      state.behaviorSeverity = "0 無";
-      state.sundowning = "沒有";
-      syncButtons();
-      renderSummary();
-      showToast("已套用平穩狀態");
-    }
-
-    function clearToday() {
-      resetState();
-      syncButtons();
-      renderSummary();
-      showToast("今天畫面已清空");
+    function copyToday() {
+      const text = [
+        `水果：${fruitLabel()}`,
+        `日期：${dateInput.value}`,
+        ...fields.map(([field, label]) => {
+          const value = state[field];
+          const text = Array.isArray(value) ? value.join("、") : value;
+          return text ? `${label}：${text}` : "";
+        }).filter(Boolean),
+        noteInput.value.trim() ? `備註：${noteInput.value.trim()}` : ""
+      ].filter(Boolean).join("\n");
+      navigator.clipboard.writeText(text).then(
+        () => showToast("摘要已複製"),
+        () => showToast("此瀏覽器無法複製")
+      );
     }
 
     document.addEventListener("click", event => {
+      const fruitButton = event.target.closest("[data-fruit]");
+      if (fruitButton) {
+        switchFruit(fruitButton.dataset.fruit);
+        return;
+      }
+
       const chip = event.target.closest(".chip");
       if (chip) {
         const group = chip.closest("[data-field]");
@@ -1456,63 +1204,47 @@
         }
         syncButtons();
         renderSummary();
-        return;
-      }
-
-      const deleteButton = event.target.closest("[data-delete]");
-      if (deleteButton) {
-        const date = deleteButton.dataset.delete;
-        if (!confirm(`確定刪除 ${date} 的本機紀錄嗎？`)) return;
-        const records = loadRecords().filter(record => record.date !== date);
-        saveRecords(records);
-        if (date === dateInput.value) loadRecordToScreen(null);
-        renderRecords();
-        showToast("已刪除紀錄");
       }
     });
 
     document.querySelectorAll("[data-date-offset]").forEach(button => {
       button.addEventListener("click", () => {
         dateInput.value = todayValue(Number(button.dataset.dateOffset));
-        const record = loadRecords().find(item => item.date === dateInput.value);
-        loadRecordToScreen(record);
+        loadRecordToScreen(findCurrentRecord());
       });
     });
 
-    dateInput.addEventListener("change", () => {
-      const record = loadRecords().find(item => item.date === dateInput.value);
-      loadRecordToScreen(record);
-    });
+    dateInput.addEventListener("change", () => loadRecordToScreen(findCurrentRecord()));
+    noteInput.addEventListener("input", renderSummary);
 
     document.querySelector("#quickCalm").addEventListener("click", applyQuickCalm);
-    document.querySelector("#saveRecord").addEventListener("click", saveCurrentRecord);
-    document.querySelector("#exportCsv").addEventListener("click", exportCsv);
-    document.querySelector("#clearToday").addEventListener("click", clearToday);
-    document.querySelector("#saveCloudConfig").addEventListener("click", saveCloudConfig);
-    document.querySelector("#signUpCloud").addEventListener("click", signUpCloud);
-    document.querySelector("#signInCloud").addEventListener("click", signInCloud);
-    document.querySelector("#signOutCloud").addEventListener("click", signOutCloud);
-    document.querySelector("#uploadCloud").addEventListener("click", uploadCloud);
-    document.querySelector("#downloadCloud").addEventListener("click", downloadCloud);
-    document.querySelector("#scrollSummary").addEventListener("click", () => {
-      document.querySelector("#summaryTitle").scrollIntoView({ behavior: "smooth", block: "start" });
+    document.querySelector("#saveRecord").addEventListener("click", () => saveCurrentRecord());
+    document.querySelector("#jumpRecords").addEventListener("click", () => recordList.scrollIntoView({ behavior: "smooth", block: "start" }));
+    document.querySelector("#saveSyncUrl").addEventListener("click", saveSyncUrl);
+    document.querySelector("#syncToday").addEventListener("click", async () => {
+      const record = await saveCurrentRecord({ quiet: true, skipSync: true });
+      await syncRecords([record]);
     });
-    document.querySelector("#copySummary").addEventListener("click", async () => {
-      const text = recordToSummary(currentRecord());
-      try {
-        await navigator.clipboard.writeText(text);
-        showToast("摘要已複製");
-      } catch {
-        showToast("此瀏覽器無法複製，請改用匯出 CSV");
-      }
+    document.querySelector("#syncPending").addEventListener("click", async () => {
+      await syncRecords(loadRecords().filter(record => !record.syncedAt));
+    });
+    document.querySelector("#exportCsv").addEventListener("click", exportCsv);
+    document.querySelector("#copyToday").addEventListener("click", copyToday);
+    document.querySelector("#clearToday").addEventListener("click", () => {
+      resetState();
+      syncButtons();
+      renderSummary();
+      showToast("今天已清空畫面");
     });
 
     resetState();
     dateInput.value = todayValue();
-    applyCloudConfig();
-    const existing = loadRecords().find(item => item.date === dateInput.value);
-    loadRecordToScreen(existing);
+    syncUrlInput.value = localStorage.getItem(syncUrlKey) || "";
+    if (syncUrlInput.value) setSyncStatus("Google 同步網址已儲存。");
+    renderFruits();
+    loadRecordToScreen(findCurrentRecord());
     renderRecords();
+
     if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
       navigator.serviceWorker.register("sw.js").catch(() => {});
     }

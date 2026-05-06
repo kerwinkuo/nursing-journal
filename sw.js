@@ -1,4 +1,4 @@
-const cacheName = "care-recorder-v2";
+const cacheName = "fruit-care-recorder-v3";
 const appShell = [
   "./",
   "./index.html",
