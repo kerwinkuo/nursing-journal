@@ -1,7 +1,7 @@
 {
-  "name": "喘息服務時段排班",
-  "short_name": "喘息排班",
-  "description": "可線上使用的喘息與短照服務時段排班工具，支援查班表與複製申請文字。",
+  "name": "果果照護日誌",
+  "short_name": "果果照護",
+  "description": "用水果匿名代號記錄多位失智症長輩的每日狀況，並可同步到 Google 試算表。",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

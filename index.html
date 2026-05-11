@@ -2,15 +2,1252 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="refresh" content="0; url=./respite-scheduler.html">
-  <title>喘息服務時段排班</title>
-  <link rel="canonical" href="./respite-scheduler.html">
-  <script>
-    window.location.replace("./respite-scheduler.html");
-  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#fff4df">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="果果照護">
+  <title>果果照護日誌</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --cream: #fff4df;
+      --paper: #fffaf0;
+      --ink: #3c362d;
+      --soft-ink: #7a6f61;
+      --line: #ead9bd;
+      --leaf: #4f8f6b;
+      --leaf-soft: #dff0df;
+      --peach: #ffcab0;
+      --peach-strong: #d96f55;
+      --berry: #f4a9bf;
+      --banana: #ffe28a;
+      --mint: #bfe7d2;
+      --sky: #baddec;
+      --shadow: 0 12px 34px rgba(97, 73, 36, 0.13);
+      --radius: 8px;
+      font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(135deg, rgba(255, 226, 138, 0.42), transparent 24rem),
+        linear-gradient(315deg, rgba(191, 231, 210, 0.46), transparent 30rem),
+        var(--cream);
+      color: var(--ink);
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .app {
+      width: min(100%, 780px);
+      margin: 0 auto;
+      padding: 14px 12px 104px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      margin: -14px -12px 12px;
+      padding: 10px 12px;
+      background: rgba(255, 244, 223, 0.9);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(122, 111, 97, 0.16);
+    }
+
+    .topbar-inner {
+      width: min(100%, 780px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    h1,
+    h2,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 1.28rem;
+      line-height: 1.2;
+      font-weight: 900;
+    }
+
+    .subtitle {
+      margin-top: 2px;
+      color: var(--soft-ink);
+      font-size: 0.86rem;
+    }
+
+    .date-box {
+      display: inline-grid;
+      grid-template-columns: auto 1fr;
+      gap: 6px;
+      align-items: center;
+      min-height: 42px;
+      padding: 0 10px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--paper);
+      box-shadow: 0 6px 18px rgba(97, 73, 36, 0.08);
+    }
+
+    .date-box input {
+      width: 120px;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--ink);
+    }
+
+    .hero {
+      display: grid;
+      gap: 12px;
+      padding: 14px;
+      border-radius: var(--radius);
+      background:
+        linear-gradient(120deg, rgba(255, 250, 240, 0.96), rgba(255, 250, 240, 0.72)),
+        radial-gradient(circle at 92% 10%, rgba(244, 169, 191, 0.42), transparent 34%);
+      border: 1px solid rgba(122, 111, 97, 0.16);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-row {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .fruit-badge {
+      width: 72px;
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--active-color, var(--banana));
+      box-shadow: inset 0 0 0 8px rgba(255, 250, 240, 0.72);
+      font-size: 2.15rem;
+    }
+
+    .hero h2 {
+      font-size: 1.08rem;
+      line-height: 1.35;
+      font-weight: 900;
+    }
+
+    .hero p {
+      margin-top: 4px;
+      color: var(--soft-ink);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .fruit-strip {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 92px;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 2px 0 4px;
+      scrollbar-width: thin;
+    }
+
+    .fruit-card {
+      min-height: 70px;
+      display: grid;
+      place-items: center;
+      gap: 2px;
+      padding: 8px 6px;
+      border-radius: var(--radius);
+      background: #fffdf6;
+      border: 1px solid var(--line);
+      color: var(--ink);
+      font-weight: 900;
+      line-height: 1.1;
+    }
+
+    .fruit-card[aria-pressed="true"] {
+      border-color: var(--leaf);
+      background: color-mix(in oklch, var(--fruit-color) 34%, white);
+      box-shadow: 0 0 0 2px rgba(79, 143, 107, 0.16);
+    }
+
+    .fruit-card .emoji {
+      font-size: 1.45rem;
+    }
+
+    .fruit-card small {
+      color: var(--soft-ink);
+      font-size: 0.72rem;
+      font-weight: 800;
+    }
+
+    .quick-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .quick-btn,
+    .small-btn {
+      min-height: 44px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.62);
+      color: var(--ink);
+      font-weight: 900;
+    }
+
+    .section {
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: var(--radius);
+      background: rgba(255, 250, 240, 0.84);
+      border: 1px solid rgba(122, 111, 97, 0.15);
+    }
+
+    .section-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .section h2 {
+      font-size: 1rem;
+      line-height: 1.3;
+      font-weight: 900;
+    }
+
+    .hint {
+      margin-top: 3px;
+      color: var(--soft-ink);
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
+
+    .done-dot {
+      width: 12px;
+      height: 12px;
+      flex: 0 0 auto;
+      margin-top: 5px;
+      border-radius: 50%;
+      background: var(--line);
+    }
+
+    .section[data-touched="true"] .done-dot {
+      background: var(--leaf);
+    }
+
+    .chips {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .chips.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .chip {
+      min-height: 50px;
+      padding: 9px 8px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: #fffdf6;
+      color: var(--ink);
+      font-weight: 900;
+      line-height: 1.18;
+      transition: transform 130ms ease, background 130ms ease, border-color 130ms ease;
+    }
+
+    .chip:active,
+    .quick-btn:active,
+    .small-btn:active,
+    .fruit-card:active {
+      transform: scale(0.98);
+    }
+
+    .chip[aria-pressed="true"] {
+      border-color: var(--leaf);
+      background: var(--leaf-soft);
+    }
+
+    .chip.warn[aria-pressed="true"] {
+      border-color: var(--peach-strong);
+      background: #ffe7df;
+      color: #7f372b;
+    }
+
+    .group {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .label {
+      color: var(--soft-ink);
+      font-size: 0.82rem;
+      font-weight: 900;
+    }
+
+    textarea,
+    .sync-input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fffdf6;
+      color: var(--ink);
+      outline: 0;
+    }
+
+    textarea {
+      min-height: 72px;
+      resize: vertical;
+      padding: 10px 12px;
+      line-height: 1.5;
+    }
+
+    .sync-input {
+      min-height: 48px;
+      padding: 10px 12px;
+    }
+
+    textarea:focus,
+    .sync-input:focus {
+      border-color: var(--leaf);
+      box-shadow: 0 0 0 3px rgba(79, 143, 107, 0.12);
+    }
+
+    .sync-box {
+      display: grid;
+      gap: 10px;
+    }
+
+    details summary {
+      list-style: none;
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    details summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .sync-status {
+      padding: 10px 12px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(79, 143, 107, 0.22);
+      background: rgba(223, 240, 223, 0.72);
+      color: #315d45;
+      font-weight: 900;
+      line-height: 1.45;
+    }
+
+    .sync-status.warn {
+      border-color: var(--peach);
+      background: #fff0e9;
+      color: #8a3d31;
+    }
+
+    .summary {
+      display: grid;
+      gap: 7px;
+    }
+
+    .summary-row {
+      display: grid;
+      grid-template-columns: 86px 1fr;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 1px solid rgba(122, 111, 97, 0.13);
+      line-height: 1.45;
+    }
+
+    .summary-row:last-child {
+      border-bottom: 0;
+    }
+
+    .summary-row strong {
+      color: var(--soft-ink);
+      font-size: 0.82rem;
+    }
+
+    .summary-row span {
+      font-weight: 900;
+    }
+
+    .record-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .record-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 11px 12px;
+      border: 1px solid rgba(122, 111, 97, 0.15);
+      border-radius: var(--radius);
+      background: rgba(255, 253, 246, 0.82);
+    }
+
+    .record-item b {
+      display: block;
+    }
+
+    .record-item span {
+      display: block;
+      margin-top: 2px;
+      color: var(--soft-ink);
+      font-size: 0.82rem;
+      line-height: 1.35;
+    }
+
+    .sync-mark {
+      padding: 6px 8px;
+      border-radius: 999px;
+      background: var(--leaf-soft);
+      color: #315d45;
+      font-size: 0.76rem;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .sync-mark.wait {
+      background: #fff0e9;
+      color: #8a3d31;
+    }
+
+    .bottom-bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 30;
+      padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+      background: rgba(255, 244, 223, 0.92);
+      backdrop-filter: blur(18px);
+      border-top: 1px solid rgba(122, 111, 97, 0.16);
+    }
+
+    .bottom-inner {
+      width: min(100%, 780px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 9px;
+    }
+
+    .primary,
+    .secondary {
+      min-height: 52px;
+      border-radius: var(--radius);
+      font-weight: 950;
+    }
+
+    .primary {
+      background: var(--leaf);
+      color: #fffdf6;
+      box-shadow: 0 10px 24px rgba(79, 143, 107, 0.24);
+    }
+
+    .secondary {
+      border: 1px solid var(--line);
+      background: var(--paper);
+      color: var(--ink);
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 86px;
+      z-index: 50;
+      width: min(calc(100% - 28px), 440px);
+      transform: translate(-50%, 18px);
+      opacity: 0;
+      pointer-events: none;
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      background: #3c362d;
+      color: #fffaf0;
+      text-align: center;
+      font-weight: 900;
+      transition: opacity 160ms ease, transform 160ms ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (min-width: 680px) {
+      .app {
+        padding-top: 20px;
+      }
+
+      .topbar {
+        margin-top: -20px;
+      }
+
+      h1 {
+        font-size: 1.45rem;
+      }
+
+      .hero-row {
+        grid-template-columns: 88px 1fr;
+      }
+
+      .fruit-badge {
+        width: 88px;
+        font-size: 2.55rem;
+      }
+
+      .chips {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+  </style>
 </head>
 <body>
-  <p><a href="./respite-scheduler.html">開啟喘息服務時段排班</a></p>
+  <main class="app">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div>
+          <h1>果果照護日誌</h1>
+          <p class="subtitle">匿名水果代號，快速點選存紀錄</p>
+        </div>
+        <label class="date-box">
+          <span aria-hidden="true">日</span>
+          <span class="sr-only">紀錄日期</span>
+          <input id="recordDate" type="date">
+        </label>
+      </div>
+    </header>
+
+    <section class="hero" id="hero">
+      <div class="hero-row">
+        <div class="fruit-badge" id="activeFruitEmoji" aria-hidden="true">🍎</div>
+        <div>
+          <h2 id="activeFruitTitle">蘋果個案</h2>
+          <p>不要輸入姓名。每位長輩用一種水果，切換水果後紀錄會分開保存。</p>
+        </div>
+      </div>
+      <div class="fruit-strip" id="fruitStrip" aria-label="選擇水果個案"></div>
+      <div class="quick-row">
+        <button class="quick-btn" type="button" data-date-offset="-1">昨天</button>
+        <button class="quick-btn" type="button" data-date-offset="0">今天</button>
+        <button class="quick-btn" type="button" id="quickCalm">平穩模板</button>
+      </div>
+    </section>
+
+    <section class="section" data-section="overall">
+      <div class="section-head">
+        <div>
+          <h2>整體狀態</h2>
+          <p class="hint">先點最接近平常的變化</p>
+        </div>
+        <span class="done-dot" aria-hidden="true"></span>
+      </div>
+      <div class="chips three" data-field="overall" data-type="single">
+        <button class="chip" type="button" data-value="比平常好">比平常好</button>
+        <button class="chip" type="button" data-value="差不多">差不多</button>
+        <button class="chip warn" type="button" data-value="比平常差">比平常差</button>
+      </div>
+    </section>
+
+    <section class="section" data-section="mood">
+      <div class="section-head">
+        <div>
+          <h2>心情</h2>
+          <p class="hint">可複選</p>
+        </div>
+        <span class="done-dot" aria-hidden="true"></span>
+      </div>
+      <div class="chips" data-field="mood" data-type="multi">
+        <button class="chip" type="button" data-value="平穩">平穩</button>
+        <button class="chip warn" type="button" data-value="焦慮">焦慮</button>
+        <button class="chip warn" type="button" data-value="易怒">易怒</button>
+        <button class="chip warn" type="button" data-value="低落">低落</button>
+        <button class="chip warn" type="button" data-value="害怕">害怕</button>
+        <button class="chip warn" type="button" data-value="哭泣">哭泣</button>
+      </div>
+    </section>
+
+    <section class="section" data-section="behavior">
+      <div class="section-head">
+        <div>
+          <h2>行為</h2>
+          <p class="hint">今天有出現就點</p>
+        </div>
+        <span class="done-dot" aria-hidden="true"></span>
+      </div>
+      <div class="chips" data-field="behavior" data-type="multi">
+        <button class="chip warn" type="button" data-value="遊走">遊走</button>
+        <button class="chip warn" type="button" data-value="拒絕照護">拒照護</button>
+        <button class="chip warn" type="button" data-value="重複問">重複問</button>
+        <button class="chip warn" type="button" data-value="幻覺">幻覺</button>
+        <button class="chip warn" type="button" data-value="妄想">妄想</button>
+        <button class="chip warn" type="button" data-value="攻擊">攻擊</button>
+      </div>
+    </section>
+
+    <section class="section" data-section="sundown">
+      <div class="section-head">
+        <div>
+          <h2>黃昏症候群</h2>
+          <p class="hint">傍晚到夜間是否變得更混亂或焦躁</p>
+        </div>
+        <span class="done-dot" aria-hidden="true"></span>
+      </div>
+      <div class="chips three" data-field="sundown" data-type="single">
+        <button class="chip" type="button" data-value="沒有">沒有</button>
+        <button class="chip warn" type="button" data-value="疑似">疑似</button>
+        <button class="chip warn" type="button" data-value="明顯">明顯</button>
+      </div>
+    </section>
+
+    <section class="section" data-section="delirium">
+      <div class="section-head">
+        <div>
+          <h2>譫妄警訊</h2>
+          <p class="hint">突然改變、忽好忽壞要特別注意</p>
+        </div>
+        <span class="done-dot" aria-hidden="true"></span>
+      </div>
+      <div class="chips" data-field="delirium" data-type="multi">
+        <button class="chip warn" type="button" data-value="突然混亂">突然混亂</button>
+        <button class="chip warn" type="button" data-value="忽好忽壞">忽好忽壞</button>
+        <button class="chip warn" type="button" data-value="注意力差">注意力差</button>
+        <button class="chip warn" type="button" data-value="嗜睡叫不醒">嗜睡叫不醒</button>
+        <button class="chip warn" type="button" data-value="發燒感染">發燒感染</button>
+        <button class="chip warn" type="button" data-value="跌倒後變怪">跌倒後變怪</button>
+      </div>
+    </section>
+
+    <section class="section" data-section="body">
+      <div class="section-head">
+        <div>
+          <h2>身體生活</h2>
+          <p class="hint">只點異常或照護重點</p>
+        </div>
+        <span class="done-dot" aria-hidden="true"></span>
+      </div>
+      <div class="group">
+        <div class="label">睡眠與吃喝</div>
+        <div class="chips" data-field="daily" data-type="multi">
+          <button class="chip" type="button" data-value="睡得安穩">睡得安穩</button>
+          <button class="chip warn" type="button" data-value="睡不好">睡不好</button>
+          <button class="chip" type="button" data-value="食慾普通">食慾普通</button>
+          <button class="chip warn" type="button" data-value="吃少">吃少</button>
+          <button class="chip warn" type="button" data-value="喝水少">喝水少</button>
+        </div>
+      </div>
+      <div class="group">
+        <div class="label">排泄與不適</div>
+        <div class="chips" data-field="body" data-type="multi">
+          <button class="chip" type="button" data-value="排泄正常">排泄正常</button>
+          <button class="chip warn" type="button" data-value="便秘">便秘</button>
+          <button class="chip warn" type="button" data-value="腹瀉">腹瀉</button>
+          <button class="chip warn" type="button" data-value="頻尿尿痛">頻尿尿痛</button>
+          <button class="chip warn" type="button" data-value="疼痛">疼痛</button>
+          <button class="chip warn" type="button" data-value="跌倒受傷">跌倒受傷</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-section="comfort">
+      <div class="section-head">
+        <div>
+          <h2>安撫方式</h2>
+          <p class="hint">下次照護會用得上</p>
+        </div>
+        <span class="done-dot" aria-hidden="true"></span>
+      </div>
+      <div class="chips" data-field="comfort" data-type="multi">
+        <button class="chip" type="button" data-value="陪伴">陪伴</button>
+        <button class="chip" type="button" data-value="音樂">音樂</button>
+        <button class="chip" type="button" data-value="散步">散步</button>
+        <button class="chip" type="button" data-value="點心喝水">點心喝水</button>
+        <button class="chip" type="button" data-value="如廁">如廁</button>
+        <button class="chip" type="button" data-value="降低刺激">降低刺激</button>
+      </div>
+      <div class="group">
+        <div class="label">效果</div>
+        <div class="chips three" data-field="effect" data-type="single">
+          <button class="chip" type="button" data-value="有效">有效</button>
+          <button class="chip" type="button" data-value="一點點">一點點</button>
+          <button class="chip warn" type="button" data-value="無效">無效</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>備註</h2>
+          <p class="hint">可不填，需要時打一小句就好</p>
+        </div>
+      </div>
+      <textarea id="note" placeholder="例如：下午換環境後比較焦躁"></textarea>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>今天摘要</h2>
+          <p class="hint">按儲存前看一下</p>
+        </div>
+      </div>
+      <div id="summary" class="summary"></div>
+    </section>
+
+    <section class="section">
+      <details>
+        <summary>Google 試算表同步</summary>
+        <div class="sync-box" style="margin-top:10px">
+          <div id="syncStatus" class="sync-status warn">尚未設定同步網址。先照 README 貼上 Apps Script 網址即可。</div>
+          <input id="syncUrl" class="sync-input" type="url" inputmode="url" placeholder="貼上 Google Apps Script 同步網址">
+          <div class="quick-row">
+            <button class="small-btn" type="button" id="saveSyncUrl">儲存網址</button>
+            <button class="small-btn" type="button" id="syncToday">同步今天</button>
+            <button class="small-btn" type="button" id="syncPending">補送未同步</button>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>已存紀錄</h2>
+          <p class="hint" id="recordHint">目前水果的最近紀錄</p>
+        </div>
+      </div>
+      <div class="quick-row" style="margin-bottom:10px">
+        <button class="small-btn" type="button" id="exportCsv">匯出 CSV</button>
+        <button class="small-btn" type="button" id="copyToday">複製摘要</button>
+        <button class="small-btn" type="button" id="clearToday">清空今天</button>
+      </div>
+      <div id="recordList" class="record-list"></div>
+    </section>
+  </main>
+
+  <div class="bottom-bar">
+    <div class="bottom-inner">
+      <button class="primary" type="button" id="saveRecord">儲存今天</button>
+      <button class="secondary" type="button" id="jumpRecords">看紀錄</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const recordsKey = "fruitCareRecords.v1";
+    const activeFruitKey = "fruitCareActive.v1";
+    const syncUrlKey = "fruitCareGoogleScriptUrl.v1";
+
+    const fruits = [
+      ["apple", "🍎", "蘋果", "#ffd0c8"],
+      ["banana", "🍌", "香蕉", "#ffe28a"],
+      ["grape", "🍇", "葡萄", "#d7c6ff"],
+      ["orange", "🍊", "橘子", "#ffd2a6"],
+      ["strawberry", "🍓", "草莓", "#ffc1cf"],
+      ["mango", "🥭", "芒果", "#ffd890"],
+      ["pineapple", "🍍", "鳳梨", "#f4df78"],
+      ["kiwi", "🥝", "奇異果", "#c9e58f"],
+      ["peach", "🍑", "水蜜桃", "#ffc7b5"],
+      ["pear", "🍐", "梨子", "#dceb9f"],
+      ["watermelon", "🍉", "西瓜", "#c5efbc"],
+      ["cherry", "🍒", "櫻桃", "#ffb1bd"],
+      ["blueberry", "🫐", "藍莓", "#c8d5ff"],
+      ["lemon", "🍋", "檸檬", "#ffe98a"],
+      ["coconut", "🥥", "椰子", "#dec7a7"],
+      ["melon", "🍈", "哈密瓜", "#cfeaa9"],
+      ["papaya", "🟧", "木瓜", "#ffc078"],
+      ["persimmon", "🟠", "柿子", "#ffbd8f"],
+      ["tomato", "🍅", "番茄", "#ffb0a6"],
+      ["avocado", "🥑", "酪梨", "#bfe2a1"]
+    ].map(([id, emoji, name, color], index) => ({ id, emoji, name, color, code: String(index + 1).padStart(2, "0") }));
+
+    const fields = [
+      ["overall", "整體"],
+      ["mood", "心情"],
+      ["behavior", "行為"],
+      ["sundown", "黃昏"],
+      ["delirium", "譫妄"],
+      ["daily", "睡眠吃喝"],
+      ["body", "身體排泄"],
+      ["comfort", "安撫"],
+      ["effect", "效果"]
+    ];
+
+    const state = {};
+    let activeFruitId = localStorage.getItem(activeFruitKey) || fruits[0].id;
+
+    const dateInput = document.querySelector("#recordDate");
+    const fruitStrip = document.querySelector("#fruitStrip");
+    const hero = document.querySelector("#hero");
+    const activeFruitEmoji = document.querySelector("#activeFruitEmoji");
+    const activeFruitTitle = document.querySelector("#activeFruitTitle");
+    const summary = document.querySelector("#summary");
+    const recordList = document.querySelector("#recordList");
+    const recordHint = document.querySelector("#recordHint");
+    const noteInput = document.querySelector("#note");
+    const toast = document.querySelector("#toast");
+    const syncUrlInput = document.querySelector("#syncUrl");
+    const syncStatus = document.querySelector("#syncStatus");
+
+    function todayValue(offset = 0) {
+      const date = new Date();
+      date.setDate(date.getDate() + offset);
+      const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+      return local.toISOString().slice(0, 10);
+    }
+
+    function getFruit(id = activeFruitId) {
+      return fruits.find(fruit => fruit.id === id) || fruits[0];
+    }
+
+    function fruitLabel(id = activeFruitId) {
+      const fruit = getFruit(id);
+      return `${fruit.name}${fruit.code}`;
+    }
+
+    function loadRecords() {
+      try {
+        return JSON.parse(localStorage.getItem(recordsKey)) || [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveRecords(records) {
+      localStorage.setItem(recordsKey, JSON.stringify(records));
+    }
+
+    function normalizeField(field) {
+      const group = document.querySelector(`[data-field="${field}"]`);
+      return group && group.dataset.type === "multi" ? [] : "";
+    }
+
+    function resetState() {
+      fields.forEach(([field]) => {
+        state[field] = normalizeField(field);
+      });
+      noteInput.value = "";
+    }
+
+    function renderFruits() {
+      fruitStrip.innerHTML = fruits.map(fruit => `
+        <button class="fruit-card" type="button" data-fruit="${fruit.id}" style="--fruit-color:${fruit.color}" aria-pressed="${fruit.id === activeFruitId ? "true" : "false"}">
+          <span class="emoji">${fruit.emoji}</span>
+          <span>${fruit.name}</span>
+          <small>${fruit.code}</small>
+        </button>
+      `).join("");
+      const fruit = getFruit();
+      hero.style.setProperty("--active-color", fruit.color);
+      activeFruitEmoji.textContent = fruit.emoji;
+      activeFruitTitle.textContent = `${fruit.name}${fruit.code}`;
+      recordHint.textContent = `${fruit.name}${fruit.code} 的最近紀錄`;
+    }
+
+    function syncButtons() {
+      document.querySelectorAll("[data-field]").forEach(group => {
+        const field = group.dataset.field;
+        const value = state[field];
+        group.querySelectorAll(".chip").forEach(button => {
+          const selected = Array.isArray(value)
+            ? value.includes(button.dataset.value)
+            : value === button.dataset.value;
+          button.setAttribute("aria-pressed", selected ? "true" : "false");
+        });
+      });
+
+      document.querySelectorAll(".section[data-section]").forEach(section => {
+        const touched = [...section.querySelectorAll("[data-field]")].some(group => {
+          const value = state[group.dataset.field];
+          return Array.isArray(value) ? value.length > 0 : Boolean(value);
+        });
+        section.dataset.touched = touched ? "true" : "false";
+      });
+    }
+
+    function renderSummary() {
+      const rows = [
+        ["水果", fruitLabel()],
+        ["日期", dateInput.value],
+        ...fields.map(([field, label]) => {
+          const value = state[field];
+          const text = Array.isArray(value) ? value.join("、") : value;
+          return text ? [label, text] : null;
+        }).filter(Boolean)
+      ];
+      if (noteInput.value.trim()) rows.push(["備註", noteInput.value.trim()]);
+
+      summary.innerHTML = rows.map(([label, text]) => `
+        <div class="summary-row">
+          <strong>${escapeHtml(label)}</strong>
+          <span>${escapeHtml(text)}</span>
+        </div>
+      `).join("");
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toast.classList.remove("show"), 1800);
+    }
+
+    function currentRecord() {
+      const fruit = getFruit();
+      const record = {
+        id: `${fruit.id}-${dateInput.value}`,
+        date: dateInput.value,
+        residentId: fruit.id,
+        residentLabel: `${fruit.name}${fruit.code}`,
+        residentFruit: fruit.name,
+        savedAt: new Date().toISOString(),
+        note: noteInput.value.trim()
+      };
+      fields.forEach(([field]) => {
+        record[field] = Array.isArray(state[field]) ? [...state[field]] : state[field];
+      });
+      return record;
+    }
+
+    function loadRecordToScreen(record) {
+      resetState();
+      fields.forEach(([field]) => {
+        if (record && field in record) {
+          state[field] = Array.isArray(record[field]) ? [...record[field]] : record[field];
+        }
+      });
+      noteInput.value = record && record.note ? record.note : "";
+      syncButtons();
+      renderSummary();
+    }
+
+    function findCurrentRecord() {
+      return loadRecords().find(record => record.residentId === activeFruitId && record.date === dateInput.value);
+    }
+
+    function upsertRecord(record) {
+      const records = loadRecords();
+      const index = records.findIndex(item => item.id === record.id);
+      if (index >= 0) {
+        records[index] = { ...records[index], ...record, syncedAt: records[index].syncedAt || "" };
+      } else {
+        records.unshift(record);
+      }
+      records.sort((a, b) => b.date.localeCompare(a.date) || a.residentLabel.localeCompare(b.residentLabel));
+      saveRecords(records);
+      return records.find(item => item.id === record.id);
+    }
+
+    async function saveCurrentRecord(options = {}) {
+      const record = upsertRecord(currentRecord());
+      renderRecords();
+      renderSummary();
+      if (!options.quiet) showToast("已存到手機");
+      if (localStorage.getItem(syncUrlKey) && !options.skipSync) {
+        await syncRecords([record]);
+      }
+      return record;
+    }
+
+    function applyQuickCalm() {
+      resetState();
+      state.overall = "差不多";
+      state.mood = ["平穩"];
+      state.sundown = "沒有";
+      state.daily = ["睡得安穩", "食慾普通"];
+      state.body = ["排泄正常"];
+      state.effect = "有效";
+      syncButtons();
+      renderSummary();
+      showToast("已套用平穩模板");
+    }
+
+    function switchFruit(id) {
+      activeFruitId = id;
+      localStorage.setItem(activeFruitKey, id);
+      renderFruits();
+      loadRecordToScreen(findCurrentRecord());
+      renderRecords();
+    }
+
+    function renderRecords() {
+      const fruit = getFruit();
+      const records = loadRecords().filter(record => record.residentId === fruit.id);
+      if (!records.length) {
+        recordList.innerHTML = `<div class="record-item"><div><b>${escapeHtml(fruitLabel())}</b><span>還沒有紀錄。</span></div><span class="sync-mark wait">未存</span></div>`;
+        return;
+      }
+      recordList.innerHTML = records.slice(0, 10).map(record => {
+        const flags = [
+          record.overall,
+          record.sundown ? `黃昏:${record.sundown}` : "",
+          record.delirium && record.delirium.length ? `譫妄:${record.delirium.length}項` : ""
+        ].filter(Boolean).join(" / ");
+        return `
+          <div class="record-item">
+            <div>
+              <b>${escapeHtml(record.date)}</b>
+              <span>${escapeHtml(flags || "已記錄")}</span>
+            </div>
+            <span class="sync-mark ${record.syncedAt ? "" : "wait"}">${record.syncedAt ? "已同步" : "待同步"}</span>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function flattenRecord(record) {
+      return {
+        syncedAt: new Date().toISOString(),
+        date: record.date,
+        residentLabel: record.residentLabel,
+        overall: record.overall || "",
+        mood: join(record.mood),
+        behavior: join(record.behavior),
+        sundown: record.sundown || "",
+        delirium: join(record.delirium),
+        daily: join(record.daily),
+        body: join(record.body),
+        comfort: join(record.comfort),
+        effect: record.effect || "",
+        note: record.note || "",
+        id: record.id
+      };
+    }
+
+    function join(value) {
+      return Array.isArray(value) ? value.join("、") : (value || "");
+    }
+
+    async function syncRecords(records) {
+      const url = localStorage.getItem(syncUrlKey);
+      if (!url) {
+        setSyncStatus("尚未貼上 Google 同步網址。", "warn");
+        return;
+      }
+      if (!records.length) {
+        setSyncStatus("沒有需要同步的紀錄。");
+        return;
+      }
+      try {
+        const payload = {
+          app: "fruit-care-log",
+          version: 1,
+          records: records.map(flattenRecord)
+        };
+        await fetch(url, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload)
+        });
+        const now = new Date().toISOString();
+        const ids = new Set(records.map(record => record.id));
+        const all = loadRecords().map(record => ids.has(record.id) ? { ...record, syncedAt: now } : record);
+        saveRecords(all);
+        renderRecords();
+        setSyncStatus(`已送出 ${records.length} 筆到 Google 試算表。`);
+        showToast("已送出 Google");
+      } catch (error) {
+        setSyncStatus("同步失敗，請檢查同步網址或網路。", "warn");
+      }
+    }
+
+    function setSyncStatus(message, tone = "ok") {
+      syncStatus.textContent = message;
+      syncStatus.classList.toggle("warn", tone === "warn");
+    }
+
+    function saveSyncUrl() {
+      const url = syncUrlInput.value.trim();
+      if (!url) {
+        setSyncStatus("請貼上 Google Apps Script 同步網址。", "warn");
+        return;
+      }
+      localStorage.setItem(syncUrlKey, url);
+      setSyncStatus("同步網址已儲存。之後按儲存今天會自動送出。");
+      showToast("同步網址已存");
+    }
+
+    function exportCsv() {
+      const records = loadRecords();
+      if (!records.length) {
+        showToast("還沒有紀錄可匯出");
+        return;
+      }
+      const headers = ["日期", "水果代號", "整體", "心情", "行為", "黃昏症候群", "譫妄警訊", "睡眠吃喝", "身體排泄", "安撫方式", "效果", "備註", "本機ID", "儲存時間", "同步時間"];
+      const rows = records.map(record => [
+        record.date,
+        record.residentLabel,
+        record.overall,
+        join(record.mood),
+        join(record.behavior),
+        record.sundown,
+        join(record.delirium),
+        join(record.daily),
+        join(record.body),
+        join(record.comfort),
+        record.effect,
+        record.note,
+        record.id,
+        record.savedAt,
+        record.syncedAt
+      ]);
+      const csv = "\ufeff" + [headers, ...rows].map(row => row.map(csvEscape).join(",")).join("\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `果果照護日誌-${todayValue()}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      URL.revokeObjectURL(link.href);
+      link.remove();
+      showToast("CSV 已匯出");
+    }
+
+    function csvEscape(value) {
+      return `"${String(value || "").replaceAll('"', '""')}"`;
+    }
+
+    function copyToday() {
+      const text = [
+        `水果：${fruitLabel()}`,
+        `日期：${dateInput.value}`,
+        ...fields.map(([field, label]) => {
+          const value = state[field];
+          const text = Array.isArray(value) ? value.join("、") : value;
+          return text ? `${label}：${text}` : "";
+        }).filter(Boolean),
+        noteInput.value.trim() ? `備註：${noteInput.value.trim()}` : ""
+      ].filter(Boolean).join("\n");
+      navigator.clipboard.writeText(text).then(
+        () => showToast("摘要已複製"),
+        () => showToast("此瀏覽器無法複製")
+      );
+    }
+
+    document.addEventListener("click", event => {
+      const fruitButton = event.target.closest("[data-fruit]");
+      if (fruitButton) {
+        switchFruit(fruitButton.dataset.fruit);
+        return;
+      }
+
+      const chip = event.target.closest(".chip");
+      if (chip) {
+        const group = chip.closest("[data-field]");
+        const field = group.dataset.field;
+        const value = chip.dataset.value;
+        if (group.dataset.type === "multi") {
+          const list = Array.isArray(state[field]) ? state[field] : [];
+          state[field] = list.includes(value)
+            ? list.filter(item => item !== value)
+            : [...list, value];
+        } else {
+          state[field] = state[field] === value ? "" : value;
+        }
+        syncButtons();
+        renderSummary();
+      }
+    });
+
+    document.querySelectorAll("[data-date-offset]").forEach(button => {
+      button.addEventListener("click", () => {
+        dateInput.value = todayValue(Number(button.dataset.dateOffset));
+        loadRecordToScreen(findCurrentRecord());
+      });
+    });
+
+    dateInput.addEventListener("change", () => loadRecordToScreen(findCurrentRecord()));
+    noteInput.addEventListener("input", renderSummary);
+
+    document.querySelector("#quickCalm").addEventListener("click", applyQuickCalm);
+    document.querySelector("#saveRecord").addEventListener("click", () => saveCurrentRecord());
+    document.querySelector("#jumpRecords").addEventListener("click", () => recordList.scrollIntoView({ behavior: "smooth", block: "start" }));
+    document.querySelector("#saveSyncUrl").addEventListener("click", saveSyncUrl);
+    document.querySelector("#syncToday").addEventListener("click", async () => {
+      const record = await saveCurrentRecord({ quiet: true, skipSync: true });
+      await syncRecords([record]);
+    });
+    document.querySelector("#syncPending").addEventListener("click", async () => {
+      await syncRecords(loadRecords().filter(record => !record.syncedAt));
+    });
+    document.querySelector("#exportCsv").addEventListener("click", exportCsv);
+    document.querySelector("#copyToday").addEventListener("click", copyToday);
+    document.querySelector("#clearToday").addEventListener("click", () => {
+      resetState();
+      syncButtons();
+      renderSummary();
+      showToast("今天已清空畫面");
+    });
+
+    resetState();
+    dateInput.value = todayValue();
+    syncUrlInput.value = localStorage.getItem(syncUrlKey) || "";
+    if (syncUrlInput.value) setSyncStatus("Google 同步網址已儲存。");
+    renderFruits();
+    loadRecordToScreen(findCurrentRecord());
+    renderRecords();
+
+    if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+      navigator.serviceWorker.register("sw.js").catch(() => {});
+    }
+  </script>
 </body>
 </html>

@@ -1,9 +1,7 @@
-const cacheName = "respite-scheduler-v1";
+const cacheName = "fruit-care-recorder-v3";
 const appShell = [
   "./",
   "./index.html",
-  "./respite-scheduler.html",
-  "./scheduler-core.js",
   "./manifest.webmanifest",
   "./icon.svg"
 ];
